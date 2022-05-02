@@ -1,9 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#E8E3D6</color>
+    <color name="gold">#F5E44C</color>
+    <color name="white">#FFFFFF</color>
+    <color name="background">#FCF8EF</color>
     <color name="header">#5D7A7D</color>
-    <color name="neutral">#85A6AF</color>
-    <color name="valid">#48C29B</color>
-    <color name="cancel">#D44E79</color>
+    <color name="header_main">#EDE8DC</color>
+    <color name="footer">#CCCCCC</color>
+
+    <color name="button_neutral">#86A7B0</color>
+    <color name="button_neutral_shadow">#7A98A0</color>
+
+    <color name="button_valid">#48C29B</color>
+    <color name="button_valid_shadow">#37A175</color>
+
+    <color name="button_cancel">#D44E79</color>
+    <color name="button_cancel_shadow">#BF466D</color>
+
     <color name="button">#5DB4E3</color>
+    <color name="button_shadow">#55A4CF</color>
 </resources>
