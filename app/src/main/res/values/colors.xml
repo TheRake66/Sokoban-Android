@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#E8E3D6</color>
+    <color name="header">#5D7A7D</color>
+    <color name="neutral">#85A6AF</color>
+    <color name="valid">#48C29B</color>
+    <color name="cancel">#D44E79</color>
+    <color name="button">#5DB4E3</color>
+</resources>
