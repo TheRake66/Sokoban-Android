@@ -57,7 +57,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <Button
-            android:id="@+id/continu"
+            android:id="@+id/undo"
             style="@style/ButtonValid"
             android:layout_width="60dp"
             android:layout_height="0dp"

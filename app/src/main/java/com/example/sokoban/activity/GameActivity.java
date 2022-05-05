@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.gridlayout.widget.GridLayout;
 
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.sokoban.R;
@@ -43,7 +44,7 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.continu).setOnClickListener(v -> this.toogleMsgbox());
         findViewById(R.id.menu).setOnClickListener(v -> this.finish());
         findViewById(R.id.reset).setOnClickListener(v -> GameActivity.board.resetBoard());
-        findViewById(R.id.continu).setOnClickListener(v -> GameActivity.board.loadState());
+        findViewById(R.id.undo).setOnClickListener(v -> GameActivity.board.loadState());
 
         // Preparation du jeu
         String map = getIntent().getStringExtra("map");
@@ -65,6 +66,7 @@ public class GameActivity extends AppCompatActivity {
      * Affiche ou cache le menu pause
      */
     private void toogleMsgbox() {
+        Log.d("toogleMsgbox", "toogleMsgbox");
         ConstraintLayout msgbox = findViewById(R.id.msgbox);
         msgbox.setVisibility(
                 msgbox.getVisibility() == findViewById(R.id.msgbox).INVISIBLE ?
