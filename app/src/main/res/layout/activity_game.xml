@@ -10,27 +10,26 @@
 
     <TextView
         android:id="@+id/count"
+        style="@style/Text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:fontFamily="@font/bold"
-        android:text="Nombre de coups : 0"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/back" />
+        android:layout_marginBottom="24dp"
+        android:text="Mouve count : 0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/back"
+        style="@style/Header"
         android:layout_width="0dp"
         android:layout_height="60dp"
-        android:background="@color/header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/pause"
             style="@style/ButtonNeutral"
             android:layout_width="60dp"
             android:layout_height="0dp"
@@ -58,7 +57,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <Button
-            android:id="@+id/undo"
+            android:id="@+id/continu"
             style="@style/ButtonValid"
             android:layout_width="60dp"
             android:layout_height="0dp"
@@ -74,16 +73,13 @@
 
         <TextView
             android:id="@+id/level"
+            style="@style/Head"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:fontFamily="@font/bold"
-            android:text="Niveau 0"
-            android:textAllCaps="true"
-            android:textColor="@color/white"
-            android:textSize="20sp"
+            android:layout_marginStart="24dp"
+            android:text="Level 0"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/button"
+            app:layout_constraintStart_toEndOf="@+id/pause"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -98,5 +94,97 @@
         app:layout_constraintTop_toBottomOf="@+id/back">
 
     </androidx.gridlayout.widget.GridLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/msgbox"
+        android:layout_width="300dp"
+        android:layout_height="230dp"
+        android:background="@color/background_light"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/button4"
+            style="@style/Button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginEnd="64dp"
+            android:drawableStart="@drawable/hand"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/back"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <Button
+            android:id="@+id/button3"
+            style="@style/Button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="64dp"
+            android:drawableStart="@drawable/sound"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            app:layout_constraintBottom_toTopOf="@+id/back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView3"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/back"
+            style="@style/Msgbox"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <Button
+                android:id="@+id/menu"
+                style="@style/ButtonNeutral"
+                android:layout_width="60dp"
+                android:layout_height="0dp"
+                android:drawableStart="@drawable/list"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <Button
+                android:id="@+id/continu"
+                style="@style/ButtonValid"
+                android:layout_width="60dp"
+                android:layout_height="0dp"
+                android:drawableStart="@drawable/play"
+                android:drawableLeft="@drawable/play"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/Head"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:background="@color/msgbox_top"
+            android:gravity="center"
+            android:text="Paused"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -30,9 +30,13 @@ public class HomeActivity extends AppCompatActivity {
                         Color.parseColor("#FDF95F"),
                         Color.parseColor("#FDF95F"),
                         Color.parseColor("#FDF95F"),
+                        Color.parseColor("#FDF95F"),
+                        Color.parseColor("#FDF95F"),
+                        Color.parseColor("#FDF95F"),
                         Color.parseColor("#F0D033"),
                         Color.parseColor("#F0D033"),
                         Color.parseColor("#F0D033"),
+                        Color.parseColor("#DFA817"),
                         Color.parseColor("#DFA817")
                 }, null, Shader.TileMode.CLAMP);
         textView.getPaint().setShader(textShader);

@@ -1,14 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="gold">#F5E44C</color>
     <color name="white">#FFFFFF</color>
-    <color name="background">#FCF8EF</color>
-    <color name="header">#5D7A7D</color>
+    <color name="background">#E8E3D6</color>
+    <color name="background_light">#FCF8EF</color>
+    <color name="gray">#9E9E9D</color>
+
     <color name="header_main">#EDE8DC</color>
-    <color name="footer">#CCCCCC</color>
+    <color name="footer_main">#CCCCCC</color>
+
+    <color name="msgbox_top">#EB4964</color>
+    <color name="msgbox_bar">#F0ECE4</color>
+    <color name="msgbox_bar_shadow">#D8D4CD</color>
+
+    <color name="header">#5D7A7D</color>
+    <color name="header_shadow">#536D70</color>
 
     <color name="button_neutral">#86A7B0</color>
     <color name="button_neutral_shadow">#7A98A0</color>
+
+    <color name="button_level">#94DE49</color>
+    <color name="button_level_shadow">#85C841</color>
+
+    <color name="button_level_lock">#CCCCCC</color>
+    <color name="button_level_lock_shadow">#B8B8B8</color>
 
     <color name="button_valid">#48C29B</color>
     <color name="button_valid_shadow">#37A175</color>

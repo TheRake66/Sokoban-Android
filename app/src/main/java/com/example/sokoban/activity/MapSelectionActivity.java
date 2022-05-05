@@ -83,6 +83,7 @@ public class MapSelectionActivity extends AppCompatActivity {
         String[]lesMapDure = {map1,map2,map3,map4};
 
         GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
+        gridLayoutDure.setColumnCount(4);
         createButtons(gridLayoutDure, lesMapDure);
 
 
@@ -114,7 +115,7 @@ public class MapSelectionActivity extends AppCompatActivity {
         createButtons(gridLayoutFichier, lesMapsFichier);
 
         GridLayout gridLayoutAPI = findViewById(R.id.gridLayoutAPI);
-        createButtons(gridLayoutAPI, lesMapDure);
+        //createButtons(gridLayoutAPI, lesMapDure);
 
 
 
@@ -162,13 +163,13 @@ public class MapSelectionActivity extends AppCompatActivity {
 
     public void createButtons(GridLayout gridLayout, String[] lesMap) {
         for (int i = 0; i < lesMap.length; i++) {
-            Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonValid), null, 0);
-            button.setHeight(200);
-            button.setWidth(200);
-            button.setTextSize(25);
+            Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonLevel), null, 0);
+            button.setHeight(175);
+            button.setWidth(175);
+            button.setTextSize(20);
             button.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
             GridLayout.LayoutParams params = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, 0f), GridLayout.spec(GridLayout.UNDEFINED, 0f));
-            params.setMargins(0, 0, 30, 20);
+            params.setMargins(0, 0, 35, 35);
             button.setLayoutParams(params);
             button.setText(Integer.toString(i + 1));
             int finalI = i;

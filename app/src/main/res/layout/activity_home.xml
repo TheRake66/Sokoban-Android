@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/background_light"
     tools:context=".activity.HomeActivity">
 
   <ImageView
@@ -46,15 +46,15 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="160dp"
+        android:fontFamily="@font/bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:shadow_color="@color/footer"
+        app:shadow_color="@color/footer_main"
         app:text="SOKOBAN"
         app:text_color="@color/white"
-        app:text_size="60sp"
 
-        android:fontFamily="@font/bold"/>
+        app:text_size="60sp" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -62,7 +62,7 @@
       android:id="@+id/constraintLayout"
       android:layout_width="0dp"
       android:layout_height="100dp"
-      android:background="@color/footer"
+      android:background="@color/footer_main"
       app:layout_constraintBottom_toBottomOf="parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent">
@@ -89,8 +89,7 @@
         android:fontFamily="@font/bold"
         android:text="BUSTOS - HEYTMANN"
         android:textAllCaps="true"
-        android:textColor="@color/gold"
-        android:textSize="16sp"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
