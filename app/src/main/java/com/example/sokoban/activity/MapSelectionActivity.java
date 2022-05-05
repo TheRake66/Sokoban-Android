@@ -28,7 +28,7 @@ public class MapSelectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map_selection);
 
         findViewById(R.id.button_return).setOnClickListener(v -> {
-            startActivity(new Intent(MapSelectionActivity.this, HomelActivity.class));
+            startActivity(new Intent(MapSelectionActivity.this, HomeActivity.class));
         });
 
 
@@ -56,8 +56,8 @@ public class MapSelectionActivity extends AppCompatActivity {
         String map2 =
             "######\n" +
             "#P...#\n" +
-            "#..BX#\n" +
-            "#.XB.#\n" +
+            "#..BG#\n" +
+            "#.GB.#\n" +
             "######";
 
         String map3 =
@@ -124,7 +124,12 @@ public class MapSelectionActivity extends AppCompatActivity {
             params.setMargins(0, 0, 30, 20);
             button.setLayoutParams(params);
             button.setText(Integer.toString(i + 1));
-            button.setOnClickListener(v -> { });
+            int finalI = i;
+            button.setOnClickListener(v -> {
+                Intent intent = new Intent(this, GameActivity.class);
+                intent.putExtra("map", lesMap[finalI]);
+                startActivity(intent);
+            });
             gridLayout.addView(button);
         }
     }

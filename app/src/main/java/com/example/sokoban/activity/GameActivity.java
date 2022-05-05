@@ -37,8 +37,8 @@ public class GameActivity extends AppCompatActivity {
     private final char TYPE_BOX = 'B';
     private final char TYPE_TARGET = 'G';
     private final char TYPE_PLAYER = 'P';
-    private final char TYPE_PLAYER_ON_TARGET = 'Z';
-    private final char TYPE_BOX_ON_TARGET = 'E';
+    private final char TYPE_PLAYER_ON_TARGET = 'F';
+    private final char TYPE_BOX_ON_TARGET = 'S';
 
     // Les directions
     private final int DIRECTION_UP = 0;
@@ -178,13 +178,16 @@ public class GameActivity extends AppCompatActivity {
             return false;
         }
 
+        // Futur type de la case
+        char t = this.matrix[newY][newX];
+
         // Si le joueur est sur un mur
-        if (this.matrix[newY][newX] == TYPE_WALL) {
+        if (t == TYPE_WALL) {
             return false;
         }
 
         // Si l'entite est sur une caisse
-        if (this.matrix[newY][newX] == TYPE_BOX) {
+        if (t == TYPE_BOX || t == TYPE_BOX_ON_TARGET) {
             return this.moveEntity(newX, newY, d);
         }
 
@@ -236,10 +239,14 @@ public class GameActivity extends AppCompatActivity {
                 name = "floor";
                 break;
             case TYPE_PLAYER:
+            case TYPE_PLAYER_ON_TARGET:
                 name = "player";
                 break;
             case TYPE_BOX:
                 name = "box";
+                break;
+            case TYPE_BOX_ON_TARGET:
+                name = "box_green";
                 break;
             case TYPE_TARGET:
                 name = "gem";
