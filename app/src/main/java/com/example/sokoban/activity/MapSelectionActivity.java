@@ -27,11 +27,12 @@ public class MapSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_selection);
 
+        // Le bontoun retour redirige vers l'accueil
         findViewById(R.id.button_return).setOnClickListener(v -> {
             startActivity(new Intent(MapSelectionActivity.this, HomeActivity.class));
         });
 
-
+        //Le bouton mute coupe les sons et affiche un bouton pour les rétablir
         Button buttonMute = findViewById(R.id.button_mute);
         findViewById(R.id.button_mute).setOnClickListener(v -> {
                 AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
@@ -44,7 +45,7 @@ public class MapSelectionActivity extends AppCompatActivity {
                 }
         });
 
-
+        // définie les maps en dur
         String map1 =
             "######\n" +
             "#..P.#\n" +
@@ -70,11 +71,12 @@ public class MapSelectionActivity extends AppCompatActivity {
 
         String[]lesMapDure = {map1,map2,map3};
 
+        //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
         createButtons(gridLayoutDure, lesMapDure);
 
 
-
+        //Lecture des fichiers de maps
         AssetManager am = this.getAssets();
         String[] lesMapsFichier = {};
         try {
@@ -97,10 +99,18 @@ public class MapSelectionActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-
+        //Ajoute les maps en fichier dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutFichier = findViewById(R.id.gridLayoutFichier);
         createButtons(gridLayoutFichier, lesMapsFichier);
 
+
+
+        //Lecture de l'API pour récupérer les maps
+        String[] lesMapsAPI = {};
+
+
+
+        //Ajoute les maps de l'API dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutAPI = findViewById(R.id.gridLayoutAPI);
         createButtons(gridLayoutAPI, lesMapDure);
 
@@ -113,8 +123,15 @@ public class MapSelectionActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * fonction pour créer les boutons de sélection de map
+     * @param gridLayout
+     * @param lesMap
+     */
     public void createButtons(GridLayout gridLayout, String[] lesMap) {
+        //parcourt toutes les maps
         for (int i = 0; i < lesMap.length; i++) {
+            //crée un bouton et ajoute le style
             Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonValid), null, 0);
             button.setHeight(200);
             button.setWidth(200);
@@ -125,11 +142,13 @@ public class MapSelectionActivity extends AppCompatActivity {
             button.setLayoutParams(params);
             button.setText(Integer.toString(i + 1));
             int finalI = i;
+            //ajoute un listener sur le bouton pour lancer la partie
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(this, GameActivity.class);
                 intent.putExtra("map", lesMap[finalI]);
                 startActivity(intent);
             });
+            //ajoute le bouton dans le gridlayout
             gridLayout.addView(button);
         }
     }
