@@ -16,9 +16,11 @@ import android.widget.Button;
 
 import com.example.sokoban.R;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class MapSelectionActivity extends AppCompatActivity {
 
@@ -27,8 +29,10 @@ public class MapSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_selection);
 
+        //Log.d("MapSelectionActivity", this.LoadText(this.getResourcesId("map")));
+
         findViewById(R.id.button_return).setOnClickListener(v -> {
-            startActivity(new Intent(MapSelectionActivity.this, HomeActivity.class));
+            finish();
         });
 
 
@@ -50,7 +54,7 @@ public class MapSelectionActivity extends AppCompatActivity {
             "#..P.#\n" +
             "#B####\n" +
             "#.#   \n" +
-            "#X#   \n" +
+            "#G#   \n" +
             "###   ";
 
         String map2 =
@@ -68,7 +72,15 @@ public class MapSelectionActivity extends AppCompatActivity {
             "#....#\n" +
             "######";
 
-        String[]lesMapDure = {map1,map2,map3};
+        String map4 =
+            "###### \n" +
+            "#P...##\n" +
+            "#.BB..#\n" +
+            "#.#G.G#\n" +
+            "#.....#\n" +
+            "#######";
+
+        String[]lesMapDure = {map1,map2,map3,map4};
 
         GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
         createButtons(gridLayoutDure, lesMapDure);
@@ -112,6 +124,41 @@ public class MapSelectionActivity extends AppCompatActivity {
 
 
     }
+    public String LoadText(int resourceId) {
+        // The InputStream opens the resourceId and sends it to the buffer
+        InputStream is = this.getResources().openRawResource(resourceId);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String readLine = null;
+        String map = "";
+
+        try {
+            // While the BufferedReader readLine is not null
+            while ((readLine = br.readLine()) != null) {
+                // Append the readLine to the map
+                map += readLine + "\n";
+            }
+
+            // Close the InputStream and BufferedReader
+            is.close();
+            br.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return map;
+    }
+
+
+
+
+    private int getResourcesId(String file) {
+        return super
+                .getResources()
+                .getIdentifier(file, "drawable", this.getPackageName());
+    }
+
+
 
     public void createButtons(GridLayout gridLayout, String[] lesMap) {
         for (int i = 0; i < lesMap.length; i++) {

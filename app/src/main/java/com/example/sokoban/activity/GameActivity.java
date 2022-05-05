@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.media.Image;
 import android.os.Bundle;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.MotionEventCompat;
 import androidx.gridlayout.widget.GridLayout;
 
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sokoban.R;
@@ -24,12 +26,19 @@ import java.util.List;
 
 public class GameActivity extends AppCompatActivity {
 
+    // Le contenaire du jeu
+    private ConstraintLayout gameContainer;
+
     // Le plateau de jeu
     private GridLayout board;
 
-    // La matrice de jeu
+    // Compter le nombre de mouvements effectués
+    private int moves;
+    private TextView movesTextView;
 
+    // La matrice de jeu
     private char[][] matrix;
+
     // Les types de cases
     private final char TYPE_EMPTY = ' ';
     private final char TYPE_WALL = '#';
@@ -55,9 +64,13 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        // Preparation du compteur de mouvements
+        this.moves = 0;
+        this.movesTextView = findViewById(R.id.count);
         // Récupération du plateau de jeu
         this.board = findViewById(R.id.board);
-        this.board.setOnTouchListener(new OnSwipeTouchListener(GameActivity.this) {
+        this.gameContainer = findViewById(R.id.container);
+        this.gameContainer.setOnTouchListener(new OnSwipeTouchListener(GameActivity.this) {
             public void onSwipeTop() {
                 int[] pos = GameActivity.this.getPlayerPosition();
                 GameActivity.this.moveEntity(pos[0], pos[1], DIRECTION_UP);
@@ -104,7 +117,7 @@ public class GameActivity extends AppCompatActivity {
             // On parcourt les caractères de la ligne
             for (char c : line.toCharArray()) {
                 // On remplit la matrice
-                this.matrix[y][x] = c;
+                this.setType(x, y, c);
                 // On ajoute l'image correspondante
                 this.addNewImage();
                 x++;
@@ -125,7 +138,7 @@ public class GameActivity extends AppCompatActivity {
             // On parcourt les caractères de la ligne
             for (int x = 0; x < this.matrix[y].length; x++) {
                 // On ajoute l'image correspondante
-                char t = this.matrix[y][x];
+                char t = this.getType(x, y);
                 String name = this.typeToImageName(t);
                 this.changeImage(index, name);
                 index++;
@@ -148,14 +161,59 @@ public class GameActivity extends AppCompatActivity {
             int[] newPos = this.changePosition(x, y, d);
             int newX = newPos[0];
             int newY = newPos[1];
+
+            // Recupere le type de l'entite
+            char t = this.getType(x, y);
+            // Recupere le type de l'entite a la nouvelle position
+            char newT = this.getType(newX, newY);
+
+
+            // Si l'entite est un joueur sur le target ou une caisse sur le target on remet le target sinon on met le sol
+            char floor = t == TYPE_PLAYER_ON_TARGET || t == TYPE_BOX_ON_TARGET ?
+                    TYPE_TARGET :
+                    TYPE_FLOOR;
+
+            // Si entite est un joueur et que la case est un target alors on met le joueur sur le target
+            if (t == TYPE_PLAYER && newT == TYPE_TARGET) {
+                t = TYPE_PLAYER_ON_TARGET;
+            // Si entite est un joueur sur le target et que la case est pas un target alors on met le joueur sur le floor
+            } else if (t == TYPE_PLAYER_ON_TARGET && newT != TYPE_TARGET) {
+                t = TYPE_PLAYER;
+            }
+
+            // Si entite est une caisse et que la case est un target alors on met la caisse sur le target
+            if (t == TYPE_BOX && newT == TYPE_TARGET) {
+                t = TYPE_BOX_ON_TARGET;
+            // Si entite est une caisse sur le target et que la case est pas un target alors on met la caisse sur le floor
+            } else if (t == TYPE_BOX_ON_TARGET && newT != TYPE_TARGET) {
+                t = TYPE_BOX;
+            }
+
             // On déplace l'entité
-            this.matrix[newY][newX] = this.matrix[y][x];
-            this.matrix[y][x] = TYPE_FLOOR;
+            this.setType(newX, newY, t);
+            this.setType(x, y, floor);
             this.displayBoard();
+            this.incrementMoves();
+
+            // Verifi si le joueur a gagné
+            if (this.checkWin()) {
+                Toast.makeText(this, "Vous avez gagné !", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+
             return true;
         } else {
             return false;
         }
+    }
+
+
+    /**
+     * Incremente le nombre de coups
+     */
+    private void incrementMoves() {
+        this.moves++;
+        this.movesTextView.setText("Nombre de coups : " + this.moves);
     }
 
 
@@ -179,19 +237,20 @@ public class GameActivity extends AppCompatActivity {
         }
 
         // Futur type de la case
-        char t = this.matrix[newY][newX];
+        char t = this.getType(newX, newY);
 
         // Si le joueur est sur un mur
         if (t == TYPE_WALL) {
             return false;
-        }
 
         // Si l'entite est sur une caisse
-        if (t == TYPE_BOX || t == TYPE_BOX_ON_TARGET) {
+        } else if (t == TYPE_BOX || t == TYPE_BOX_ON_TARGET) {
             return this.moveEntity(newX, newY, d);
-        }
 
-        return true;
+        // Si l'entite peut se déplacer
+        } else {
+            return true;
+        }
     }
 
 
@@ -310,13 +369,57 @@ public class GameActivity extends AppCompatActivity {
         int[] p = new int[2];
         for (int y = 0; y < this.matrix.length; y++) {
             for (int x = 0; x < this.matrix[y].length; x++) {
-                if (this.matrix[y][x] == TYPE_PLAYER) {
+                int t = this.getType(x, y);
+                if (t == TYPE_PLAYER || t == TYPE_PLAYER_ON_TARGET) {
                     p[0] = x;
                     p[1] = y;
                 }
             }
         }
         return p;
+    }
+
+
+    /**
+     * Recupere le type de la case à la position spécifiée
+     *
+     * @param x La position en x
+     * @param y La position en y
+     * @return Le type de la case
+     */
+    private char getType(int x, int y) {
+        return this.matrix[y][x];
+    }
+
+
+    /**
+     * Change le type de la case à la position spécifiée
+     *
+     * @param x La position en x
+     * @param y La position en y
+     * @param type Le type de la case
+     */
+    private void setType(int x, int y, char type) {
+        this.matrix[y][x] = type;
+    }
+
+
+    /**
+     * Verifie si toutes les caisses sont sur les cibles
+     *
+     * @return true si toutes les caisses sont sur les cibles
+     */
+    private boolean checkWin() {
+        for (int y = 0; y < this.matrix.length; y++) {
+            for (int x = 0; x < this.matrix[y].length; x++) {
+                int t = this.getType(x, y);
+                // Il reste encore des caisse sans target
+                if (t == TYPE_BOX) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
 }
