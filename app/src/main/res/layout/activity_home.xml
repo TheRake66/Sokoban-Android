@@ -42,22 +42,19 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
+    <com.example.sokoban.lib.LongShadowTextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:fontFamily="@font/bold"
-        android:shadowColor="@color/footer"
-        android:shadowDx="10"
-        android:shadowDy="10"
-        android:shadowRadius="1"
-        android:text="Sokoban"
-        android:textColor="@color/white"
-        android:textSize="72sp"
+        android:layout_height="160dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:shadow_color="@color/footer"
+        app:text="SOKOBAN"
+        app:text_color="@color/white"
+        app:text_size="60sp"
+
+        android:fontFamily="@font/bold"/>
 
   </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -85,7 +82,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/copy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"

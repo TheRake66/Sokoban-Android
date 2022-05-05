@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.sokoban.R;
 import com.example.sokoban.lib.OnSwipeTouchListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,11 +31,17 @@ public class GameActivity extends AppCompatActivity {
     private GridLayout board;
 
     // Compter le nombre de mouvements effectués
-    private int moves;
+    private int moves = 0;
     private TextView movesTextView;
 
     // La matrice de jeu
     private char[][] matrix;
+
+    // Carte originale
+    private char[][] originalMatrix;
+
+    // Liste des deplacements effectués
+    private List<char[][]> matrixStates = new ArrayList<>();
 
     // Les types de cases
     private final char TYPE_EMPTY = ' ';
@@ -66,34 +73,106 @@ public class GameActivity extends AppCompatActivity {
                 .setText("Niveau " + getIntent().getIntExtra("level", 1));
 
         // Preparation du compteur de mouvements
-        this.moves = 0;
         this.movesTextView = findViewById(R.id.count);
+
         // Récupération du plateau de jeu
         this.board = findViewById(R.id.board);
+
+        // Ajout des écouteurs de swipes
         findViewById(R.id.container).setOnTouchListener(new OnSwipeTouchListener(GameActivity.this) {
             public void onSwipeTop() {
                 int[] pos = GameActivity.this.getPlayerPosition();
-                GameActivity.this.moveEntity(pos[0], pos[1], DIRECTION_UP);
+                if (GameActivity.this.moveEntity(pos[0], pos[1], DIRECTION_UP)) {
+                    GameActivity.this.incrementMoves();
+                    GameActivity.this.saveMove();
+                }
             }
             public void onSwipeRight() {
                 int[] pos = GameActivity.this.getPlayerPosition();
-                GameActivity.this.moveEntity(pos[0], pos[1], DIRECTION_RIGHT);
+                if (GameActivity.this.moveEntity(pos[0], pos[1], DIRECTION_RIGHT)) {
+                    GameActivity.this.incrementMoves();
+                    GameActivity.this.saveMove();
+                }
             }
             public void onSwipeLeft() {
                 int[] pos = GameActivity.this.getPlayerPosition();
-                GameActivity.this.moveEntity(pos[0], pos[1], DIRECTION_LEFT);
+                if (GameActivity.this.moveEntity(pos[0], pos[1], DIRECTION_LEFT)) {
+                    GameActivity.this.incrementMoves();
+                    GameActivity.this.saveMove();
+                }
             }
             public void onSwipeBottom() {
                 int[] pos = GameActivity.this.getPlayerPosition();
-                GameActivity.this.moveEntity(pos[0], pos[1], DIRECTION_DOWN);
+                if (GameActivity.this.moveEntity(pos[0], pos[1], DIRECTION_DOWN)) {
+                    GameActivity.this.incrementMoves();
+                    GameActivity.this.saveMove();
+                }
             }
 
         });
+
+        // Ajout des écouteurs de clics sur le bouton reset
+        findViewById(R.id.reset).setOnClickListener(v -> {
+            GameActivity.this.resetBoard();
+        });
+
+        // Ajout des écouteurs de clics sur le bouton undo
+        findViewById(R.id.undo).setOnClickListener(v -> {
+            GameActivity.this.undoMove();
+        });
+
         // Récupération de la carte dans les extras
         String map = getIntent().getStringExtra("map");
+
         // Chargement de la carte
         this.loadMap(map);
+
         // Affichage du plateau de jeu
+        this.displayBoard();
+    }
+
+    private void saveMove() {
+        // Sauvegarde du mouvement
+        int width = this.matrix[0].length;
+        int height = this.matrix.length;
+        char[][] save = new char[height][width];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                save[y][x] = this.matrix[y][x];
+            }
+        }
+        this.matrixStates.add(save);
+        Log.d("GameActivity", "Sauvegarde du mouvement");
+    }
+
+    private void undoMove() {
+        if (this.matrixStates.size() > 0) {
+            int lastIndex = this.matrixStates.size() - 1;
+            char[][] lastState = this.matrixStates.get(lastIndex);
+            for (int y = 0; y < this.matrix.length; y++) {
+                for (int x = 0; x < this.matrix[y].length; x++) {
+                    this.matrix[y][x] = lastState[y][x];
+                }
+            }
+            this.matrixStates.remove(lastIndex);
+            this.decrementMoves();
+            this.displayBoard();
+            Log.d("GameActivity", "Annulation du mouvement");
+        }
+    }
+
+
+
+    /**
+     * Remet le plateau de jeu à son état original
+     */
+    private void resetBoard() {
+        for (int y = 0; y < this.matrix.length; y++) {
+            for (int x = 0; x < this.matrix[y].length; x++) {
+                this.matrix[y][x] = this.originalMatrix[y][x];
+            }
+        }
+        this.resetMoves();
         this.displayBoard();
     }
 
@@ -107,10 +186,12 @@ public class GameActivity extends AppCompatActivity {
         // Découpe la carte en lignes
         String[] lines = map.split("\n");
         // Initialise la matrice
-        this.matrix = new char[lines.length][lines[0].length()];
+        int height = lines.length;
+        int width = lines[0].length();
+        this.matrix = new char[height][width];
         // Change le nombre de lignes et de colonnes
-        this.board.setColumnCount(lines[0].length());
-        this.board.setRowCount(lines.length);
+        this.board.setColumnCount(width);
+        this.board.setRowCount(height);
         // On parcourt les lignes de la carte
         int x = 0, y = 0;
         for (String line : lines) {
@@ -124,6 +205,13 @@ public class GameActivity extends AppCompatActivity {
             }
             x = 0;
             y++;
+        }
+        // On sauvegarde la carte originale
+        this.originalMatrix = new char[height][width];
+        for (y = 0; y < height; y++) {
+            for (x = 0; x < width; x++) {
+                this.originalMatrix[y][x] = this.matrix[y][x];
+            }
         }
     }
 
@@ -153,6 +241,7 @@ public class GameActivity extends AppCompatActivity {
      * @param x La position en x
      * @param y La position en y
      * @param d La direction du déplacement
+     * @return True si le déplacement a été effectué, false sinon
      */
     private boolean moveEntity(int x, int y, int d) {
         // Si l'entite peut se déplacer
@@ -193,13 +282,9 @@ public class GameActivity extends AppCompatActivity {
             this.setType(newX, newY, t);
             this.setType(x, y, floor);
             this.displayBoard();
-            this.incrementMoves();
 
             // Verifi si le joueur a gagné
-            if (this.checkWin()) {
-                Toast.makeText(this, "Vous avez gagné !", Toast.LENGTH_SHORT).show();
-                finish();
-            }
+            this.checkWin();
 
             return true;
         } else {
@@ -213,6 +298,24 @@ public class GameActivity extends AppCompatActivity {
      */
     private void incrementMoves() {
         this.moves++;
+        this.movesTextView.setText("Nombre de coups : " + this.moves);
+    }
+
+
+    /**
+     * Decremente le nombre de coups
+     */
+    private void decrementMoves() {
+        this.moves--;
+        this.movesTextView.setText("Nombre de coups : " + this.moves);
+    }
+
+
+    /**
+     * Remet le nombre de coups à 0
+     */
+    private void resetMoves() {
+        this.moves = 0;
         this.movesTextView.setText("Nombre de coups : " + this.moves);
     }
 
@@ -406,20 +509,19 @@ public class GameActivity extends AppCompatActivity {
 
     /**
      * Verifie si toutes les caisses sont sur les cibles
-     *
-     * @return true si toutes les caisses sont sur les cibles
      */
-    private boolean checkWin() {
+    private void checkWin() {
         for (int y = 0; y < this.matrix.length; y++) {
             for (int x = 0; x < this.matrix[y].length; x++) {
                 int t = this.getType(x, y);
                 // Il reste encore des caisse sans target
                 if (t == TYPE_BOX) {
-                    return false;
+                    return;
                 }
             }
         }
-        return true;
+        Toast.makeText(this, "Vous avez gagné !", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
 }
