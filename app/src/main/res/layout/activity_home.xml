@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".activity.HomelActivity">
+    tools:context=".activity.HomeActivity">
 
   <ImageView
       android:id="@+id/imageView10"
@@ -22,7 +22,7 @@
       android:layout_height="wrap_content"
       app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
       app:layout_constraintEnd_toEndOf="parent"
-      app:srcCompat="@drawable/crate_42" />
+      app:srcCompat="@drawable/box" />
 
   <ImageView
       android:id="@+id/imageView8"
@@ -30,7 +30,7 @@
       android:layout_height="wrap_content"
       app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
       app:layout_constraintStart_toStartOf="parent"
-      app:srcCompat="@drawable/crate_42" />
+      app:srcCompat="@drawable/box" />
 
   <androidx.constraintlayout.widget.ConstraintLayout
       android:id="@+id/constraintLayout2"
@@ -105,7 +105,7 @@
       android:layout_height="wrap_content"
       app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
       app:layout_constraintStart_toEndOf="@+id/imageView8"
-      app:srcCompat="@drawable/crate_11" />
+      app:srcCompat="@drawable/box_steel" />
 
   <ImageView
       android:id="@+id/imageView7"
@@ -113,13 +113,13 @@
       android:layout_height="wrap_content"
       app:layout_constraintBottom_toTopOf="@+id/imageView8"
       app:layout_constraintStart_toStartOf="parent"
-      app:srcCompat="@drawable/crate_17" />
+      app:srcCompat="@drawable/box_mix" />
 
   <Button
       android:id="@+id/button2"
       style="@style/ButtonValid"
       android:layout_width="200dp"
-      android:layout_height="52dp"
+      android:layout_height="60dp"
       android:layout_marginTop="24dp"
       android:text="More games"
       android:textSize="24sp"
@@ -129,11 +129,14 @@
 
   <Button
       android:id="@+id/button_play"
-      style="@style/Button"
+      style="@style/ButtonIcon"
       android:layout_width="200dp"
-      android:layout_height="52dp"
+      android:layout_height="60dp"
+      android:drawableStart="@drawable/play"
+      android:paddingLeft="15dp"
+      android:paddingRight="0dp"
       android:text="Play"
-      android:textSize="24sp"
+      android:textSize="28sp"
       app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toStartOf="parent"

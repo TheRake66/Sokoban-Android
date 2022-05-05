@@ -7,15 +7,16 @@ import android.os.Bundle;
 
 import com.example.sokoban.R;
 
-public class HomelActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        // Bouton jouer
         findViewById(R.id.button_play).setOnClickListener(v -> {
-            startActivity(new Intent(HomelActivity.this, MapSelectionActivity.class));
+            startActivity(new Intent(HomeActivity.this, MapSelectionActivity.class));
         });
     }
 }

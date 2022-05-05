@@ -6,10 +6,12 @@
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/drawable/borderbutton.xml" value="0.196" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/drawable/button.xml" value="0.2135" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/drawable/button_cancel.xml" value="0.2135" />
+        <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/drawable/button_icon.xml" value="0.2135" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/drawable/button_neutral.xml" value="0.2135" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/drawable/button_valid.xml" value="0.196" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/drawable/gradient.xml" value="0.2135" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_accueil.xml" value="0.31614583333333335" />
+        <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_game.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_home.xml" value="0.31614583333333335" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_map_selection.xml" value="0.33" />

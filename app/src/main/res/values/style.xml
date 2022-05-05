@@ -17,6 +17,11 @@
     </style>
 
 
+    <style name="ButtonIcon" parent="BaseButton">
+        <item name="android:background">@drawable/button_icon</item>
+    </style>
+
+
     <style name="ButtonValid" parent="BaseButton">
         <item name="android:background">@drawable/button_valid</item>
     </style>
