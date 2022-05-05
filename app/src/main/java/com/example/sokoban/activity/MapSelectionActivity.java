@@ -16,9 +16,12 @@ import android.widget.Button;
 
 import com.example.sokoban.R;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
 
 public class MapSelectionActivity extends AppCompatActivity {
 
@@ -50,9 +53,9 @@ public class MapSelectionActivity extends AppCompatActivity {
             "######\n" +
             "#..P.#\n" +
             "#B####\n" +
-            "#.#   \n" +
-            "#X#   \n" +
-            "###   ";
+            "#.#---\n" +
+            "#G#---\n" +
+            "###---";
 
         String map2 =
             "######\n" +
@@ -62,7 +65,7 @@ public class MapSelectionActivity extends AppCompatActivity {
             "######";
 
         String map3 =
-            "##### \n" +
+            "#####-\n" +
             "#P..##\n" +
             "#GBS.#\n" +
             "#..#.#\n" +
@@ -73,32 +76,31 @@ public class MapSelectionActivity extends AppCompatActivity {
 
         //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
+
+        Log.d("MapSelectionActivity", "lesMapsDure = " + Arrays.toString(lesMapDure));
         createButtons(gridLayoutDure, lesMapDure);
 
 
-        //Lecture des fichiers de maps
-        AssetManager am = this.getAssets();
-        String[] lesMapsFichier = {};
+        //Lecture du fichier map.txt dans le dossier assets/maps
+        String[] lesMapsFichier = null;
+        AssetManager assetManager = getAssets();
         try {
-            InputStream is = am.open("map.txt");
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-            int i;
-            try {
-                i = is.read();
-                while (i != -1) {
-                    byteArrayOutputStream.write(i);
-                    Log.d(byteArrayOutputStream.toString(),"byteArrayOutputStream");
-                    i = is.read();
-                } is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+            //on lit le fichier map dans les assets
+            InputStream inputStream = assetManager.open("maps/map.txt");
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            String map = "";
+            //on parcourt le fichier ligne par ligne
+            while ((line = bufferedReader.readLine()) != null) {
+                //on construit la map
+                map += line + "\n";
             }
-
+            map += ",";
+            //On ajoute la map dans le tableau
+            lesMapsFichier = map.split(",");
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         //Ajoute les maps en fichier dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutFichier = findViewById(R.id.gridLayoutFichier);
         createButtons(gridLayoutFichier, lesMapsFichier);
@@ -113,12 +115,6 @@ public class MapSelectionActivity extends AppCompatActivity {
         //Ajoute les maps de l'API dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutAPI = findViewById(R.id.gridLayoutAPI);
         createButtons(gridLayoutAPI, lesMapDure);
-
-
-
-
-
-
 
 
     }
