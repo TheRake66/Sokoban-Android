@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.example.sokoban.MainActivity;
 import com.example.sokoban.R;
 
 public class HomelActivity extends AppCompatActivity {

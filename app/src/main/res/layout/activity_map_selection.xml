@@ -21,27 +21,29 @@
             style="@style/ButtonNeutral"
             android:layout_width="60dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:drawableStart="@drawable/undo"
             android:drawableLeft="@drawable/undo"
             android:paddingLeft="15dp"
-            android:paddingRight="15dp" />
+            android:paddingRight="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="SpeakableTextPresentCheck" />
 
         <Button
             android:id="@+id/button3"
             style="@style/Button"
             android:layout_width="60dp"
             android:layout_height="0dp"
+            android:drawableStart="@drawable/mute"
+            android:drawableLeft="@drawable/mute"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
-            android:drawableStart="@drawable/mute"
-            android:drawableLeft="@drawable/mute"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp" />
+            tools:ignore="SpeakableTextPresentCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
@@ -50,9 +52,26 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:fontFamily="@font/medium"
-        android:text="TextView"
+        android:text="SELECT LEVEL"
+        android:textAllCaps="true"
         android:textColor="@color/footer"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/back" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:fontFamily="@font/medium"
+        android:text="Map en dure"
+        android:textAllCaps="true"
+        android:textColor="@color/footer"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
