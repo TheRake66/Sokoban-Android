@@ -26,9 +26,6 @@ import java.util.List;
 
 public class GameActivity extends AppCompatActivity {
 
-    // Le contenaire du jeu
-    private ConstraintLayout gameContainer;
-
     // Le plateau de jeu
     private GridLayout board;
 
@@ -64,13 +61,16 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        // Recuperation du numero de niveau
+        ((TextView)findViewById(R.id.level))
+                .setText("Niveau " + getIntent().getIntExtra("level", 1));
+
         // Preparation du compteur de mouvements
         this.moves = 0;
         this.movesTextView = findViewById(R.id.count);
         // Récupération du plateau de jeu
         this.board = findViewById(R.id.board);
-        this.gameContainer = findViewById(R.id.container);
-        this.gameContainer.setOnTouchListener(new OnSwipeTouchListener(GameActivity.this) {
+        findViewById(R.id.container).setOnTouchListener(new OnSwipeTouchListener(GameActivity.this) {
             public void onSwipeTop() {
                 int[] pos = GameActivity.this.getPlayerPosition();
                 GameActivity.this.moveEntity(pos[0], pos[1], DIRECTION_UP);

@@ -175,6 +175,7 @@ public class MapSelectionActivity extends AppCompatActivity {
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(this, GameActivity.class);
                 intent.putExtra("map", lesMap[finalI]);
+                intent.putExtra("level", finalI + 1);
                 startActivity(intent);
             });
             gridLayout.addView(button);
