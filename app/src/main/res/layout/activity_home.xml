@@ -112,7 +112,7 @@
       app:srcCompat="@drawable/box_mix" />
 
   <Button
-      android:id="@+id/button2"
+      android:id="@+id/button_more"
       style="@style/ButtonValid"
       android:layout_width="200dp"
       android:layout_height="60dp"

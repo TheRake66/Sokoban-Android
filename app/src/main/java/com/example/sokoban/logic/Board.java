@@ -40,7 +40,7 @@ public class Board {
     private int boxHeight;
 
     // Les constantes
-    private static final double RATIO_MARGIN = 0.9;
+    private static final double RATIO_MARGIN = 0.8;
     private static final int MAX_BOXE_SIZE = 128;
 
 

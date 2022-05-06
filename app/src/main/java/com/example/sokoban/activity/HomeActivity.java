@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextPaint;
 import android.widget.TextView;
@@ -41,9 +42,16 @@ public class HomeActivity extends AppCompatActivity {
                 }, null, Shader.TileMode.CLAMP);
         textView.getPaint().setShader(textShader);
 
-        // Bouton jouer
+        // Bouton Play
         findViewById(R.id.button_play).setOnClickListener(v -> {
             startActivity(new Intent(HomeActivity.this, MapSelectionActivity.class));
+        });
+
+        // Bouton More Games
+        findViewById(R.id.button_more).setOnClickListener(v -> {
+            Uri uri = Uri.parse("https://github.com/TheRake66");
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
         });
     }
 }
