@@ -19,10 +19,13 @@ public class Control {
     private ConstraintLayout screenLayout;
 
     // Les directions
-    private final int DIRECTION_UP = 0;
-    private final int DIRECTION_RIGHT = 1;
-    private final int DIRECTION_DOWN = 2;
-    private final int DIRECTION_LEFT = 3;
+    public final static int DIRECTION_UP = 0;
+    public final static int DIRECTION_RIGHT = 1;
+    public final static int DIRECTION_DOWN = 2;
+    public final static int DIRECTION_LEFT = 3;
+
+    // La derniere direction
+    private int lastDirection = DIRECTION_DOWN;
 
 
     /**
@@ -62,10 +65,14 @@ public class Control {
         int[] pos = GameActivity.board.getPlayerPosition();
         int x = pos[0];
         int y = pos[1];
-        if (this.canMove(x, y, d)) {
+        this.lastDirection = d;
+        if (this.canMove(x, y, d, true)) {
             GameActivity.board.saveState();
-            this.moveEntity(x, y, d);
+            this.moveEntity(x, y, d, true);
             this.incrementMoves();
+        } else {
+            // Actualise l'image du joueur
+            GameActivity.board.displayBoard();
         }
     }
 
@@ -101,14 +108,15 @@ public class Control {
     /**
      * Deplace le joueur ou la caisse dans la matrice
      *
-     * @param x La position en x
-     * @param y La position en y
-     * @param d La direction du déplacement
+     * @param x         La position en x
+     * @param y         La position en y
+     * @param d         La direction du déplacement
+     * @param recursive Si on verifi recursivement
      * @return True si le déplacement a été effectué, false sinon
      */
-    private boolean moveEntity(int x, int y, int d) {
+    private boolean moveEntity(int x, int y, int d, boolean recursive) {
         // Si l'entite peut se déplacer
-        if (this.canMove(x, y, d)) {
+        if (this.canMove(x, y, d, recursive)) {
             // Calcul la nouvelle position
             int[] newPos = this.changePosition(x, y, d);
             int newX = newPos[0];
@@ -158,12 +166,13 @@ public class Control {
 
     /**
      * Verifie si une entite peut se déplacer
-     * @param x La position en x
-     * @param y La position en y
-     * @param d La direction du déplacement
+     * @param x         La position en x
+     * @param y         La position en y
+     * @param d         La direction du déplacement
+     * @param recursive Si on verifi recursivement
      * @return true si l'entite peut se déplacer
      */
-    private boolean canMove(int x, int y, int d) {
+    private boolean canMove(int x, int y, int d, boolean recursive) {
         // Calcul la nouvelle position
         int[] newPos = this.changePosition(x, y, d);
         int newX = newPos[0];
@@ -185,7 +194,11 @@ public class Control {
 
             // Si l'entite est sur une caisse
         } else if (t == Entity.TYPE_BOX || t == Entity.TYPE_BOX_ON_TARGET) {
-            return this.moveEntity(newX, newY, d);
+            if (recursive) {
+                return this.moveEntity(newX, newY, d, false);
+            } else {
+                return false;
+            }
 
             // Si l'entite peut se déplacer
         } else {
@@ -218,6 +231,16 @@ public class Control {
     public void resetMoves() {
         this.moves = 0;
         this.refreshMoves();
+    }
+
+
+    /**
+     * Recupere la derniere direction du joueur
+     *
+     * @return La derniere direction du joueur
+     */
+    public int getLastDirection() {
+        return lastDirection;
     }
 
 

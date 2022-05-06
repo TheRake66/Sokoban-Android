@@ -54,11 +54,10 @@ public class GameActivity extends AppCompatActivity {
         TextView counter = findViewById(R.id.count);
 
         // Initialisation des object
-        GameActivity.board = new Board(boardLayout, matrix);
-        GameActivity.entity = new Entity();
-        GameActivity.control = new Control(screenLayout, counter);
         GameActivity.map = new Map();
-        getIntent().getIntExtra("level", 1);
+        GameActivity.control = new Control(screenLayout, counter);
+        GameActivity.entity = new Entity();
+        GameActivity.board = new Board(boardLayout, matrix);
     }
 
 

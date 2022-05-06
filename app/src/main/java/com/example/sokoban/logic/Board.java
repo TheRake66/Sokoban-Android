@@ -277,7 +277,7 @@ public class Board {
             }
         }
         Toast
-                .makeText(this.context, "Vous avez gagné !", Toast.LENGTH_SHORT)
+                .makeText(this.context, "You win !", Toast.LENGTH_SHORT)
                 .show();
         Handler handler = new Handler();
         handler.postDelayed(() -> ((Activity)this.context).finish(), 2000);

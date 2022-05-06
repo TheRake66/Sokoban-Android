@@ -1,5 +1,7 @@
 package com.example.sokoban.logic;
 
+import com.example.sokoban.activity.GameActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +39,20 @@ public class Entity {
                 break;
             case TYPE_PLAYER:
             case TYPE_PLAYER_ON_TARGET:
-                name = "player";
+                switch (GameActivity.control.getLastDirection()) {
+                    case Control.DIRECTION_UP:
+                        name = "player_up";
+                        break;
+                    case Control.DIRECTION_DOWN:
+                        name = "player_down";
+                        break;
+                    case Control.DIRECTION_LEFT:
+                        name = "player_left";
+                        break;
+                    case Control.DIRECTION_RIGHT:
+                        name = "player_right";
+                        break;
+                }
                 break;
             case TYPE_BOX:
                 name = "box";

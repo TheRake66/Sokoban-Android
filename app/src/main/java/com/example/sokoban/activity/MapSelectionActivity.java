@@ -80,7 +80,18 @@ public class MapSelectionActivity extends AppCompatActivity {
             "#.....#\n" +
             "#######";
 
-        String[]lesMapDure = {map1,map2,map3,map4};
+        String map5 =
+                "  ##### \n" +
+                "###...# \n" +
+                "#GPB..# \n" +
+                "###.BG# \n" +
+                "#G##B.# \n" +
+                "#.#.G.# \n" +
+                "#B.SBBG#\n" +
+                "#...G..#\n" +
+                "########";
+
+        String[]lesMapDure = {map1,map2,map3,map4,map5};
 
         GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
         gridLayoutDure.setColumnCount(4);
