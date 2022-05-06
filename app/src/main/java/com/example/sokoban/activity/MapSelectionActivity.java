@@ -138,7 +138,7 @@ public class MapSelectionActivity extends AppCompatActivity {
         //parcourt toutes les maps
         for (int i = 0; i < lesMap.size(); i++) {
             //crée un bouton et ajoute le style
-            Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonValid), null, 0);
+            Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonLevel), null, 0);
             button.setHeight(200);
             button.setWidth(200);
             button.setTextSize(25);
