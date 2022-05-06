@@ -21,7 +21,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MapSelectionActivity extends AppCompatActivity {
 
@@ -72,35 +74,27 @@ public class MapSelectionActivity extends AppCompatActivity {
             "#....#\n" +
             "######";
 
-        String[]lesMapDure = {map1,map2,map3};
+        List<String>lesMapDure = Arrays.asList(map1, map2, map3);
 
         //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
 
-        Log.d("MapSelectionActivity", "lesMapsDure = " + Arrays.toString(lesMapDure));
         createButtons(gridLayoutDure, lesMapDure);
 
 
         //Lecture du fichier map.txt dans le dossier assets/maps
-        String[] lesMapsFichier = null;
+        List<String>lesMapsFichier = new ArrayList<>();
         AssetManager assetManager = getAssets();
-        try {
-            //on lit le fichier map dans les assets
-            InputStream inputStream = assetManager.open("maps/map.txt");
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            String map = "";
-            //on parcourt le fichier ligne par ligne
-            while ((line = bufferedReader.readLine()) != null) {
-                //on construit la map
-                map += line + "\n";
-            }
-            map += ",";
-            //On ajoute la map dans le tableau
-            lesMapsFichier = map.split(",");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+
+        loadMapFile(assetManager, "maps/map.txt", lesMapsFichier);
+        Log.d("mapFichier", lesMapsFichier.toString());
+
+
+
+        loadMapFile(assetManager, "maps/map2.txt", lesMapsFichier);
+        Log.d("mapFichier2", lesMapsFichier.toString());
+
         //Ajoute les maps en fichier dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutFichier = findViewById(R.id.gridLayoutFichier);
         createButtons(gridLayoutFichier, lesMapsFichier);
@@ -108,7 +102,7 @@ public class MapSelectionActivity extends AppCompatActivity {
 
 
         //Lecture de l'API pour récupérer les maps
-        String[] lesMapsAPI = {};
+        List<String>lesMapsAPI = new ArrayList<>();;
 
 
 
@@ -124,9 +118,9 @@ public class MapSelectionActivity extends AppCompatActivity {
      * @param gridLayout
      * @param lesMap
      */
-    public void createButtons(GridLayout gridLayout, String[] lesMap) {
+    public void createButtons(GridLayout gridLayout, List<String> lesMap) {
         //parcourt toutes les maps
-        for (int i = 0; i < lesMap.length; i++) {
+        for (int i = 0; i < lesMap.size(); i++) {
             //crée un bouton et ajoute le style
             Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonValid), null, 0);
             button.setHeight(200);
@@ -141,11 +135,32 @@ public class MapSelectionActivity extends AppCompatActivity {
             //ajoute un listener sur le bouton pour lancer la partie
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(this, GameActivity.class);
-                intent.putExtra("map", lesMap[finalI]);
+                intent.putExtra("map", lesMap.get(finalI));
                 startActivity(intent);
             });
             //ajoute le bouton dans le gridlayout
             gridLayout.addView(button);
+        }
+    }
+
+    public void loadMapFile(AssetManager assetManager,String fileName, List<String> lesMapsFichier) {
+        try {
+            //on lit le fichier map dans les assets
+            InputStream inputStream = assetManager.open(fileName);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            String map = "";
+            //on parcourt le fichier ligne par ligne
+            while ((line = bufferedReader.readLine()) != null) {
+                //on construit la map
+                map += line + "\n";
+            }
+
+            //On ajoute la map dans le tableau
+            lesMapsFichier.add(map);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
