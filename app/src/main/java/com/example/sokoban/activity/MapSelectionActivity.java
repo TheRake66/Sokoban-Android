@@ -90,10 +90,51 @@ public class MapSelectionActivity extends AppCompatActivity {
             "##G.####..#####...#\n" +
             "-####--####---#####";
 
-        List<String>lesMapDure = Arrays.asList(map1, map2, map3, map4);
+        String map5 =
+            "####---######--------\n" +
+            "#.B#---#...G#--------\n" +
+            "#..#####..#########--\n" +
+            "#..G...#........B.#--\n" +
+            "#.B..G.#....G####.#--\n" +
+            "#..##..#..######..#--\n" +
+            "#.....###.######.##--\n" +
+            "####B.###.#####..#---\n" +
+            "---#..##..G####.##---\n" +
+            "---#G..#......B.#----\n" +
+            "---#.B..G.####..#----\n" +
+            "---#..###.####.##----\n" +
+            "--##.GG##B####.##----\n" +
+            "--#.B..........G#----\n" +
+            "--#........B.####----\n" +
+            "--####..###P.#-------\n" +
+            "-----#B.#-####-------\n" +
+            "-----#..#------------\n" +
+            "-----####------------";
 
+        String map6 =
+                "--------#####-------------\n" +
+                "--------#...####----------\n" +
+                "--------#.B....####--####-\n" +
+                "--------#...#.B#..####..#-\n" +
+                "###########.#...B...#...#-\n" +
+                "#GG.....#.B..####.#..#..#-\n" +
+                "#GGB..#...B..#..B.#.B.G##-\n" +
+                "#GS#.#.B.B.##..##....#G#--\n" +
+                "#GG#B.P.#...##....BB.#G#--\n" +
+                "#GG#.B.B..B.B.##...##.G#--\n" +
+                "#GSBB.#.##...B.#B#.B.#G#--\n" +
+                "#GG#......##...#.....#G#--\n" +
+                "#GG#######..###.######G##-\n" +
+                "#.BB..................SG##\n" +
+                "#..##################..GG#\n" +
+                "####----------------######";
+
+
+
+                        List<String>lesMapDure = Arrays.asList(map1, map2, map3, map4, map5, map6);
         //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
+        gridLayoutDure.setColumnCount(4);
 
         createButtons(gridLayoutDure, lesMapDure);
 
@@ -106,13 +147,24 @@ public class MapSelectionActivity extends AppCompatActivity {
         loadMapFile(assetManager, "maps/map.txt", lesMapsFichier);
         Log.d("mapFichier", lesMapsFichier.toString());
 
-
-
         loadMapFile(assetManager, "maps/map2.txt", lesMapsFichier);
         Log.d("mapFichier2", lesMapsFichier.toString());
 
+        loadMapFile(assetManager, "maps/map3.txt", lesMapsFichier);
+        Log.d("mapFichier3", lesMapsFichier.toString());
+
+        loadMapFile(assetManager, "maps/map4.txt", lesMapsFichier);
+        Log.d("mapFichier4", lesMapsFichier.toString());
+
+        loadMapFile(assetManager, "maps/map5.txt", lesMapsFichier);
+        Log.d("mapFichier5", lesMapsFichier.toString());
+
+        loadMapFile(assetManager, "maps/map6.txt", lesMapsFichier);
+        Log.d("mapFichier6", lesMapsFichier.toString());
+
         //Ajoute les maps en fichier dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutFichier = findViewById(R.id.gridLayoutFichier);
+        gridLayoutFichier.setColumnCount(4);
         createButtons(gridLayoutFichier, lesMapsFichier);
 
 
@@ -124,6 +176,7 @@ public class MapSelectionActivity extends AppCompatActivity {
 
         //Ajoute les maps de l'API dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutAPI = findViewById(R.id.gridLayoutAPI);
+        gridLayoutAPI.setColumnCount(4);
         createButtons(gridLayoutAPI, lesMapDure);
 
 
@@ -152,6 +205,7 @@ public class MapSelectionActivity extends AppCompatActivity {
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(this, GameActivity.class);
                 intent.putExtra("map", lesMap.get(finalI));
+                intent.putExtra("level", finalI + 1);
                 startActivity(intent);
             });
             //ajoute le bouton dans le gridlayout
