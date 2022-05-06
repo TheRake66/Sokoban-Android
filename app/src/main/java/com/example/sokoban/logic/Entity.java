@@ -8,7 +8,7 @@ import java.util.List;
 public class Entity {
 
     // Les types de cases
-    public static final char TYPE_EMPTY = ' ';
+    public static final char TYPE_EMPTY = '-';
     public static final char TYPE_WALL = '#';
     public static final char TYPE_FLOOR = '.';
     public static final char TYPE_BOX = 'B';

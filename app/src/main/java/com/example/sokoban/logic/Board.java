@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -35,6 +36,12 @@ public class Board {
     private int width;
     private int height;
     private int nbBoxes;
+    private int boxWidth;
+    private int boxHeight;
+
+    // Les constantes
+    private static final double RATIO_MARGIN = 0.9;
+    private static final int MAX_BOXE_SIZE = 128;
 
 
     /**
@@ -50,6 +57,14 @@ public class Board {
         this.height = matrix.length;
         this.width = matrix[0].length;
         this.nbBoxes = width * height;
+        Display display = ((Activity)context)
+                .getWindowManager()
+                .getDefaultDisplay();
+        this.boxWidth = (int)(display.getWidth() * RATIO_MARGIN / this.width);
+        this.boxHeight = (int)(display.getHeight() * RATIO_MARGIN / this.height);
+        if (this.boxWidth != this.boxHeight || this.boxWidth > MAX_BOXE_SIZE || this.boxHeight > MAX_BOXE_SIZE) {
+            this.boxWidth = this.boxHeight = Math.min(this.boxWidth, this.boxHeight);
+        }
         this.originalMatrix = new char[this.height][this.width];
         for (int y = 0; y < this.height; y++) {
             for (int x = 0; x < this.width; x++) {
@@ -243,8 +258,8 @@ public class Board {
     private void addNewImage() {
         ImageView imageView = new ImageView(this.context);
         GridLayout.LayoutParams layoutParams = new GridLayout.LayoutParams();
-        layoutParams.width = 128;
-        layoutParams.height = 128;
+        layoutParams.width = this.boxWidth;
+        layoutParams.height = this.boxWidth;
         imageView.setLayoutParams(layoutParams);
         this.board.addView(imageView);
     }

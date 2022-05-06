@@ -74,7 +74,23 @@ public class MapSelectionActivity extends AppCompatActivity {
             "#....#\n" +
             "######";
 
-        List<String>lesMapDure = Arrays.asList(map1, map2, map3);
+        String map4 =
+            "----#######--------\n" +
+            "----#..#..####-----\n" +
+            "#####.B#B.#..##----\n" +
+            "#GG.#..#..#...#----\n" +
+            "#GG.#.B#B.#..B####-\n" +
+            "#G..#.....#B..#..#-\n" +
+            "#GG...B#..#.B....#-\n" +
+            "#GGP#..#B.#B..#..#-\n" +
+            "#GG.#.B#.....B#..#-\n" +
+            "#GG.#..#BB#B..#..##\n" +
+            "#GG.#.B#..#..B#B..#\n" +
+            "#GG.#..#..#...#...#\n" +
+            "##G.####..#####...#\n" +
+            "-####--####---#####";
+
+        List<String>lesMapDure = Arrays.asList(map1, map2, map3, map4);
 
         //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
