@@ -40,14 +40,13 @@ public class MapSelectionActivity extends AppCompatActivity {
         //Le bouton mute coupe les sons et affiche un bouton pour les rétablir
         Button buttonMute = findViewById(R.id.button_mute);
         findViewById(R.id.button_mute).setOnClickListener(v -> {
-                AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
-                if (audioManager.getStreamVolume(AudioManager.STREAM_MUSIC) == 0) {
-                    audioManager.setStreamMute(AudioManager.STREAM_MUSIC, false);
-                    buttonMute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.mute, 0, 0, 0);
-                } else {
-                    audioManager.setStreamMute(AudioManager.STREAM_MUSIC, true);
-                    buttonMute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.sound, 0, 0, 0);
-                }
+            if (HomeActivity.sound.isMute()) {
+                HomeActivity.sound.setMute(false);
+                buttonMute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.sound, 0, 0, 0);
+            } else {
+                HomeActivity.sound.setMute(true);
+                buttonMute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.mute, 0, 0, 0);
+            }
         });
 
         // définie les maps en dur

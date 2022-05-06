@@ -35,7 +35,7 @@
             style="@style/Button"
             android:layout_width="60dp"
             android:layout_height="0dp"
-            android:drawableStart="@drawable/mute"
+            android:drawableStart="@drawable/sound"
             android:drawableLeft="@drawable/sound"
             android:paddingLeft="15dp"
             android:paddingRight="15dp"

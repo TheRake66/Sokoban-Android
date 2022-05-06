@@ -8,6 +8,7 @@ import androidx.gridlayout.widget.GridLayout;
 import android.widget.TextView;
 
 import com.example.sokoban.activity.GameActivity;
+import com.example.sokoban.activity.HomeActivity;
 import com.example.sokoban.lib.OnSwipeTouchListener;
 
 public class Control {
@@ -70,6 +71,7 @@ public class Control {
             GameActivity.board.saveState();
             this.moveEntity(x, y, d, true);
             this.incrementMoves();
+            HomeActivity.sound.playSound(Sound.SOUND_MOVE);
         } else {
             // Actualise l'image du joueur
             GameActivity.board.displayBoard();
@@ -133,6 +135,21 @@ public class Control {
                     Entity.TYPE_TARGET :
                     Entity.TYPE_FLOOR;
 
+
+            // Les sons de déplacement
+            switch (t) {
+                case Entity.TYPE_PLAYER:
+                case Entity.TYPE_PLAYER_ON_TARGET:
+                    HomeActivity.sound.playSound(Sound.SOUND_MOVE);
+                    break;
+
+                case Entity.TYPE_BOX:
+                case Entity.TYPE_BOX_ON_TARGET:
+                    HomeActivity.sound.playSound(Sound.SOUND_BOX_MOVE);
+                    break;
+            }
+
+
             // Si entite est un joueur et que la case est un target alors on met le joueur sur le target
             if (t == Entity.TYPE_PLAYER && newT == Entity.TYPE_TARGET) {
                 t = Entity.TYPE_PLAYER_ON_TARGET;
@@ -141,13 +158,16 @@ public class Control {
                 t = Entity.TYPE_PLAYER;
             }
 
+
             // Si entite est une caisse et que la case est un target alors on met la caisse sur le target
             if (t == Entity.TYPE_BOX && newT == Entity.TYPE_TARGET) {
+                HomeActivity.sound.playSound(Sound.SOUND_BOX_PLACED);
                 t = Entity.TYPE_BOX_ON_TARGET;
                 // Si entite est une caisse sur le target et que la case est pas un target alors on met la caisse sur le floor
             } else if (t == Entity.TYPE_BOX_ON_TARGET && newT != Entity.TYPE_TARGET) {
                 t = Entity.TYPE_BOX;
             }
+
 
             // On déplace l'entité
             GameActivity.board.setType(newX, newY, t);

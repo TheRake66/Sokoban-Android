@@ -12,8 +12,13 @@ import android.text.TextPaint;
 import android.widget.TextView;
 
 import com.example.sokoban.R;
+import com.example.sokoban.logic.Sound;
 
 public class HomeActivity extends AppCompatActivity {
+
+    // Le media player
+    public static Sound sound;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,5 +58,8 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
         });
+
+        // Initialisation des objects
+        this.sound = new Sound(this);
     }
 }

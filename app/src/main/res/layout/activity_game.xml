@@ -121,7 +121,7 @@
             tools:ignore="SpeakableTextPresentCheck" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/button_mute_game"
             style="@style/Button"
             android:layout_width="60dp"
             android:layout_height="60dp"

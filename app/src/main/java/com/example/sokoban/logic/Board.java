@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import androidx.gridlayout.widget.GridLayout;
 
+import com.example.sokoban.R;
 import com.example.sokoban.activity.GameActivity;
 import com.example.sokoban.activity.HomeActivity;
 
@@ -291,10 +292,12 @@ public class Board {
                 }
             }
         }
+        HomeActivity.sound.playSound(Sound.SOUND_VICTORY);
         Toast
                 .makeText(this.context, "You win !", Toast.LENGTH_SHORT)
                 .show();
-        ((Activity)this.context).finish();
+        Handler handler = new Handler();
+        handler.postDelayed(() -> ((Activity)this.context).finish(), 2000);
     }
 
 
