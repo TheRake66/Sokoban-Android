@@ -21,6 +21,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MapSelectionActivity extends AppCompatActivity {
 
@@ -29,13 +32,12 @@ public class MapSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_selection);
 
-        //Log.d("MapSelectionActivity", this.LoadText(this.getResourcesId("map")));
-
+        // Le bontoun retour redirige vers l'accueil
         findViewById(R.id.button_return).setOnClickListener(v -> {
-            finish();
+            startActivity(new Intent(MapSelectionActivity.this, HomeActivity.class));
         });
 
-
+        //Le bouton mute coupe les sons et affiche un bouton pour les rétablir
         Button buttonMute = findViewById(R.id.button_mute);
         findViewById(R.id.button_mute).setOnClickListener(v -> {
                 AudioManager audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
@@ -48,14 +50,14 @@ public class MapSelectionActivity extends AppCompatActivity {
                 }
         });
 
-
+        // définie les maps en dur
         String map1 =
             "######\n" +
             "#..P.#\n" +
             "#B####\n" +
-            "#.#   \n" +
-            "#G#   \n" +
-            "###   ";
+            "#.#---\n" +
+            "#G#---\n" +
+            "###---";
 
         String map2 =
             "######\n" +
@@ -65,132 +67,100 @@ public class MapSelectionActivity extends AppCompatActivity {
             "######";
 
         String map3 =
-            "##### \n" +
+            "#####-\n" +
             "#P..##\n" +
             "#GBS.#\n" +
             "#..#.#\n" +
             "#....#\n" +
             "######";
 
-        String map4 =
-            "###### \n" +
-            "#P...##\n" +
-            "#.BB..#\n" +
-            "#.#G.G#\n" +
-            "#.....#\n" +
-            "#######";
+        List<String>lesMapDure = Arrays.asList(map1, map2, map3);
 
-        String map5 =
-                "  ##### \n" +
-                "###...# \n" +
-                "#GPB..# \n" +
-                "###.BG# \n" +
-                "#G##B.# \n" +
-                "#.#.G.# \n" +
-                "#B.SBBG#\n" +
-                "#...G..#\n" +
-                "########";
-
-        String[]lesMapDure = {map1,map2,map3,map4,map5};
-
+        //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
-        gridLayoutDure.setColumnCount(4);
+
         createButtons(gridLayoutDure, lesMapDure);
 
 
-
-        AssetManager am = this.getAssets();
-        String[] lesMapsFichier = {};
-        try {
-            InputStream is = am.open("map.txt");
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-            int i;
-            try {
-                i = is.read();
-                while (i != -1) {
-                    byteArrayOutputStream.write(i);
-                    Log.d(byteArrayOutputStream.toString(),"byteArrayOutputStream");
-                    i = is.read();
-                } is.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        //Lecture du fichier map.txt dans le dossier assets/maps
+        List<String>lesMapsFichier = new ArrayList<>();
+        AssetManager assetManager = getAssets();
 
 
+        loadMapFile(assetManager, "maps/map.txt", lesMapsFichier);
+        Log.d("mapFichier", lesMapsFichier.toString());
+
+
+
+        loadMapFile(assetManager, "maps/map2.txt", lesMapsFichier);
+        Log.d("mapFichier2", lesMapsFichier.toString());
+
+        //Ajoute les maps en fichier dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutFichier = findViewById(R.id.gridLayoutFichier);
         createButtons(gridLayoutFichier, lesMapsFichier);
 
+
+
+        //Lecture de l'API pour récupérer les maps
+        List<String>lesMapsAPI = new ArrayList<>();;
+
+
+
+        //Ajoute les maps de l'API dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutAPI = findViewById(R.id.gridLayoutAPI);
-        //createButtons(gridLayoutAPI, lesMapDure);
-
-
-
-
-
-
+        createButtons(gridLayoutAPI, lesMapDure);
 
 
     }
-    public String LoadText(int resourceId) {
-        // The InputStream opens the resourceId and sends it to the buffer
-        InputStream is = this.getResources().openRawResource(resourceId);
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        String readLine = null;
-        String map = "";
 
-        try {
-            // While the BufferedReader readLine is not null
-            while ((readLine = br.readLine()) != null) {
-                // Append the readLine to the map
-                map += readLine + "\n";
-            }
-
-            // Close the InputStream and BufferedReader
-            is.close();
-            br.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return map;
-    }
-
-
-
-
-    private int getResourcesId(String file) {
-        return super
-                .getResources()
-                .getIdentifier(file, "drawable", this.getPackageName());
-    }
-
-
-
-    public void createButtons(GridLayout gridLayout, String[] lesMap) {
-        for (int i = 0; i < lesMap.length; i++) {
-            Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonLevel), null, 0);
-            button.setHeight(175);
-            button.setWidth(175);
-            button.setTextSize(20);
+    /**
+     * fonction pour créer les boutons de sélection de map
+     * @param gridLayout
+     * @param lesMap
+     */
+    public void createButtons(GridLayout gridLayout, List<String> lesMap) {
+        //parcourt toutes les maps
+        for (int i = 0; i < lesMap.size(); i++) {
+            //crée un bouton et ajoute le style
+            Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonValid), null, 0);
+            button.setHeight(200);
+            button.setWidth(200);
+            button.setTextSize(25);
             button.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
             GridLayout.LayoutParams params = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, 0f), GridLayout.spec(GridLayout.UNDEFINED, 0f));
-            params.setMargins(0, 0, 35, 35);
+            params.setMargins(0, 0, 30, 20);
             button.setLayoutParams(params);
             button.setText(Integer.toString(i + 1));
             int finalI = i;
+            //ajoute un listener sur le bouton pour lancer la partie
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(this, GameActivity.class);
-                intent.putExtra("map", lesMap[finalI]);
-                intent.putExtra("level", finalI + 1);
+                intent.putExtra("map", lesMap.get(finalI));
                 startActivity(intent);
             });
+            //ajoute le bouton dans le gridlayout
             gridLayout.addView(button);
+        }
+    }
+
+    public void loadMapFile(AssetManager assetManager,String fileName, List<String> lesMapsFichier) {
+        try {
+            //on lit le fichier map dans les assets
+            InputStream inputStream = assetManager.open(fileName);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            String map = "";
+            //on parcourt le fichier ligne par ligne
+            while ((line = bufferedReader.readLine()) != null) {
+                //on construit la map
+                map += line + "\n";
+            }
+
+            //On ajoute la map dans le tableau
+            lesMapsFichier.add(map);
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
