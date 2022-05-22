@@ -33,9 +33,7 @@ public class MapSelectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map_selection);
 
         // Le bontoun retour redirige vers l'accueil
-        findViewById(R.id.button_return).setOnClickListener(v -> {
-            startActivity(new Intent(MapSelectionActivity.this, HomeActivity.class));
-        });
+        findViewById(R.id.button_return).setOnClickListener(v -> this.finish());
 
         //Le bouton mute coupe les sons et affiche un bouton pour les rétablir
         Button buttonMute = findViewById(R.id.button_mute);

@@ -48,15 +48,7 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.reset).setOnClickListener(v -> GameActivity.board.resetBoard());
         findViewById(R.id.undo).setOnClickListener(v -> GameActivity.board.loadState());
         Button mute = findViewById(R.id.button_mute_game);
-        mute.setOnClickListener(v -> {
-            if (HomeActivity.sound.isMute()) {
-                HomeActivity.sound.setMute(false);
-                mute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.sound, 0, 0, 0);
-            } else {
-                HomeActivity.sound.setMute(true);
-                mute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.mute, 0, 0, 0);
-            }
-        });
+        mute.setOnClickListener(v -> this.toogleMute(mute));
 
         // Preparation du jeu
         String map = getIntent().getStringExtra("map");
@@ -85,5 +77,20 @@ public class GameActivity extends AppCompatActivity {
                         findViewById(R.id.msgbox).INVISIBLE);
     }
 
+
+    /**
+     * Mute ou unmute le son
+     *
+     * @param mute Le bouton mute
+     */
+    private void toogleMute(Button mute) {
+        if (HomeActivity.sound.isMute()) {
+            HomeActivity.sound.setMute(false);
+            mute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.sound, 0, 0, 0);
+        } else {
+            HomeActivity.sound.setMute(true);
+            mute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.mute, 0, 0, 0);
+        }
+    }
 
 }

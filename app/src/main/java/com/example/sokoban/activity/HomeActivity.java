@@ -61,5 +61,6 @@ public class HomeActivity extends AppCompatActivity {
 
         // Initialisation des objects
         this.sound = new Sound(this);
+        this.sound.playBackgroundSound();
     }
 }
