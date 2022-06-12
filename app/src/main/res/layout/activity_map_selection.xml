@@ -44,6 +44,21 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="1.0"
             tools:ignore="SpeakableTextPresentCheck" />
+
+        <Button
+            android:id="@+id/button_admin"
+            style="@style/ButtonValid"
+            android:layout_width="60dp"
+            android:layout_height="0dp"
+            android:drawableStart="@drawable/admin"
+            android:drawableLeft="@drawable/sound"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_mute"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="SpeakableTextPresentCheck" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -64,6 +79,21 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <androidx.gridlayout.widget.GridLayout
+                    android:id="@+id/gridLayoutSQLite"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="24dp"
+                    app:columnCount="4"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView7">
+
+                </androidx.gridlayout.widget.GridLayout>
 
                 <TextView
                     android:id="@+id/textView4"
@@ -98,6 +128,17 @@
                     android:text="Map in text file"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/gridLayoutDure" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    style="@style/Text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="24dp"
+                    android:layout_marginTop="32dp"
+                    android:text="Map in SQLite"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_ouvrir" />
 
                 <androidx.gridlayout.widget.GridLayout
                     android:id="@+id/gridLayoutDure"

@@ -15,6 +15,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.example.sokoban.R;
+import com.example.sokoban.lib.BoardEntity;
+import com.example.sokoban.lib.MyDatabaseHelper;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -42,6 +44,11 @@ public class MapSelectionActivity extends AppCompatActivity {
         // Bouton retour
         findViewById(R.id.button_return).setOnClickListener(v -> this.finish());
 
+        // Bouton Play
+        findViewById(R.id.button_admin).setOnClickListener(v -> {
+            startActivity(new Intent(MapSelectionActivity.this, AdminActivity.class));
+        });
+
         // Bouton mute
         Button buttonMute = findViewById(R.id.button_mute);
         findViewById(R.id.button_mute).setOnClickListener(v -> {
@@ -54,6 +61,11 @@ public class MapSelectionActivity extends AppCompatActivity {
             }
         });
 
+        //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
+        GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
+        this.createButtons(gridLayoutDure, this.getHardMaps());
+
+
         // Bouton ouvrir
         findViewById(R.id.button_ouvrir).setOnClickListener(v -> {
             Intent intent = new Intent()
@@ -62,9 +74,15 @@ public class MapSelectionActivity extends AppCompatActivity {
             startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
         });
 
-        //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
-        GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
-        this.createButtons(gridLayoutDure, this.getHardMaps());
+        // Charge les maps en BDD
+        GridLayout gridLayoutSQLite = findViewById(R.id.gridLayoutSQLite);
+        MyDatabaseHelper db = new MyDatabaseHelper(this);
+        List<BoardEntity> boards = db.getAllBoards();
+        List<String> maps = new ArrayList<>();
+        for (BoardEntity board : boards) {
+            maps.add(board.board);
+        }
+        this.createButtons(gridLayoutSQLite, maps);
     }
 
 
