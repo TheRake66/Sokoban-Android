@@ -15,11 +15,19 @@ import android.widget.TextView;
 import com.example.sokoban.R;
 import com.example.sokoban.logic.Sound;
 
+
+
 public class HomeActivity extends AppCompatActivity {
 
     // Le media player
     public static Sound sound;
 
+
+    /**
+     * Initialise l'accueil
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,4 +70,5 @@ public class HomeActivity extends AppCompatActivity {
         // Initialisation des objects
         this.sound = new Sound(this);
     }
+
 }

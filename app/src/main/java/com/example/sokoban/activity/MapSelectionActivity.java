@@ -3,21 +3,22 @@ package com.example.sokoban.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.gridlayout.widget.GridLayout;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.sokoban.R;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,15 +28,21 @@ import java.util.List;
 
 public class MapSelectionActivity extends AppCompatActivity {
 
+
+    /**
+     * Charge la liste des maps
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_selection);
 
-        // Le bontoun retour redirige vers l'accueil
+        // Bouton retour
         findViewById(R.id.button_return).setOnClickListener(v -> this.finish());
 
-        //Le bouton mute coupe les sons et affiche un bouton pour les rétablir
+        // Bouton mute
         Button buttonMute = findViewById(R.id.button_mute);
         findViewById(R.id.button_mute).setOnClickListener(v -> {
             if (HomeActivity.sound.isMute()) {
@@ -47,66 +54,122 @@ public class MapSelectionActivity extends AppCompatActivity {
             }
         });
 
-        // définie les maps en dur
+        // Bouton ouvrir
+        findViewById(R.id.button_ouvrir).setOnClickListener(v -> {
+            Intent intent = new Intent()
+                    .setType("*/*")
+                    .setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
+        });
+
+        //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
+        GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
+        this.createButtons(gridLayoutDure, this.getHardMaps());
+    }
+
+
+    /**
+     * Recupere le fichier selectionne
+     *
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 123 && resultCode == RESULT_OK) {
+            try {
+                Uri selected = data.getData();
+                InputStream fis = getContentResolver().openInputStream(selected);
+                StringBuilder text = new StringBuilder();
+                BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    text.append(line);
+                    text.append('\n');
+                }
+                br.close();
+                Intent intent = new Intent(this, GameActivity.class);
+                intent.putExtra("map", text.toString());
+                String name = (new File("" + selected.getPath().split(":")[1])).getName();
+                intent.putExtra("level", name);
+                startActivity(intent);
+            }
+            catch (IOException e) {
+                Toast
+                    .makeText(this, "Unable to open this file" + e.getMessage(), Toast.LENGTH_SHORT)
+                    .show();
+            }
+        }
+    }
+
+
+    /**
+     * Recupere la liste des maps en dure
+     *
+     * @return List<String> Les maps
+     */
+    public List<String> getHardMaps() {
         String map1 =
-            "######\n" +
-            "#..P.#\n" +
-            "#B####\n" +
-            "#.#---\n" +
-            "#G#---\n" +
-            "###---";
+                "######\n" +
+                "#..P.#\n" +
+                "#B####\n" +
+                "#.#---\n" +
+                "#G#---\n" +
+                "###---";
 
         String map2 =
-            "######\n" +
-            "#P...#\n" +
-            "#..BG#\n" +
-            "#.GB.#\n" +
-            "######";
+                "######\n" +
+                "#P...#\n" +
+                "#..BG#\n" +
+                "#.GB.#\n" +
+                "######";
 
         String map3 =
-            "#####-\n" +
-            "#P..##\n" +
-            "#GBS.#\n" +
-            "#..#.#\n" +
-            "#....#\n" +
-            "######";
+                "#####-\n" +
+                "#P..##\n" +
+                "#GBS.#\n" +
+                "#..#.#\n" +
+                "#....#\n" +
+                "######";
 
         String map4 =
-            "----#######--------\n" +
-            "----#..#..####-----\n" +
-            "#####.B#B.#..##----\n" +
-            "#GG.#..#..#...#----\n" +
-            "#GG.#.B#B.#..B####-\n" +
-            "#G..#.....#B..#..#-\n" +
-            "#GG...B#..#.B....#-\n" +
-            "#GGP#..#B.#B..#..#-\n" +
-            "#GG.#.B#.....B#..#-\n" +
-            "#GG.#..#BB#B..#..##\n" +
-            "#GG.#.B#..#..B#B..#\n" +
-            "#GG.#..#..#...#...#\n" +
-            "##G.####..#####...#\n" +
-            "-####--####---#####";
+                "----#######--------\n" +
+                "----#..#..####-----\n" +
+                "#####.B#B.#..##----\n" +
+                "#GG.#..#..#...#----\n" +
+                "#GG.#.B#B.#..B####-\n" +
+                "#G..#.....#B..#..#-\n" +
+                "#GG...B#..#.B....#-\n" +
+                "#GGP#..#B.#B..#..#-\n" +
+                "#GG.#.B#.....B#..#-\n" +
+                "#GG.#..#BB#B..#..##\n" +
+                "#GG.#.B#..#..B#B..#\n" +
+                "#GG.#..#..#...#...#\n" +
+                "##G.####..#####...#\n" +
+                "-####--####---#####";
 
         String map5 =
-            "####---######--------\n" +
-            "#.B#---#...G#--------\n" +
-            "#..#####..#########--\n" +
-            "#..G...#........B.#--\n" +
-            "#.B..G.#....G####.#--\n" +
-            "#..##..#..######..#--\n" +
-            "#.....###.######.##--\n" +
-            "####B.###.#####..#---\n" +
-            "---#..##..G####.##---\n" +
-            "---#G..#......B.#----\n" +
-            "---#.B..G.####..#----\n" +
-            "---#..###.####.##----\n" +
-            "--##.GG##B####.##----\n" +
-            "--#.B..........G#----\n" +
-            "--#........B.####----\n" +
-            "--####..###P.#-------\n" +
-            "-----#B.#-####-------\n" +
-            "-----#..#------------\n" +
-            "-----####------------";
+                "####---######--------\n" +
+                "#.B#---#...G#--------\n" +
+                "#..#####..#########--\n" +
+                "#..G...#........B.#--\n" +
+                "#.B..G.#....G####.#--\n" +
+                "#..##..#..######..#--\n" +
+                "#.....###.######.##--\n" +
+                "####B.###.#####..#---\n" +
+                "---#..##..G####.##---\n" +
+                "---#G..#......B.#----\n" +
+                "---#.B..G.####..#----\n" +
+                "---#..###.####.##----\n" +
+                "--##.GG##B####.##----\n" +
+                "--#.B..........G#----\n" +
+                "--#........B.####----\n" +
+                "--####..###P.#-------\n" +
+                "-----#B.#-####-------\n" +
+                "-----#..#------------\n" +
+                "-----####------------";
 
         String map6 =
                 "--------#####-------------\n" +
@@ -126,68 +189,18 @@ public class MapSelectionActivity extends AppCompatActivity {
                 "#..##################..GG#\n" +
                 "####----------------######";
 
-
-
-                        List<String>lesMapDure = Arrays.asList(map1, map2, map3, map4, map5, map6);
-        //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
-        GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
-        gridLayoutDure.setColumnCount(4);
-
-        createButtons(gridLayoutDure, lesMapDure);
-
-
-        //Lecture du fichier map.txt dans le dossier assets/maps
-        List<String>lesMapsFichier = new ArrayList<>();
-        AssetManager assetManager = getAssets();
-
-
-        loadMapFile(assetManager, "maps/map.txt", lesMapsFichier);
-        Log.d("mapFichier", lesMapsFichier.toString());
-
-        loadMapFile(assetManager, "maps/map2.txt", lesMapsFichier);
-        Log.d("mapFichier2", lesMapsFichier.toString());
-
-        loadMapFile(assetManager, "maps/map3.txt", lesMapsFichier);
-        Log.d("mapFichier3", lesMapsFichier.toString());
-
-        loadMapFile(assetManager, "maps/map4.txt", lesMapsFichier);
-        Log.d("mapFichier4", lesMapsFichier.toString());
-
-        loadMapFile(assetManager, "maps/map5.txt", lesMapsFichier);
-        Log.d("mapFichier5", lesMapsFichier.toString());
-
-        loadMapFile(assetManager, "maps/map6.txt", lesMapsFichier);
-        Log.d("mapFichier6", lesMapsFichier.toString());
-
-        //Ajoute les maps en fichier dans le gridlayout et crée les boutons de sélection de map
-        GridLayout gridLayoutFichier = findViewById(R.id.gridLayoutFichier);
-        gridLayoutFichier.setColumnCount(4);
-        createButtons(gridLayoutFichier, lesMapsFichier);
-
-
-
-        //Lecture de l'API pour récupérer les maps
-        List<String>lesMapsAPI = new ArrayList<>();;
-
-
-
-        //Ajoute les maps de l'API dans le gridlayout et crée les boutons de sélection de map
-        GridLayout gridLayoutAPI = findViewById(R.id.gridLayoutAPI);
-        gridLayoutAPI.setColumnCount(4);
-        createButtons(gridLayoutAPI, lesMapDure);
-
-
+        return Arrays.asList(map1, map2, map3, map4, map5, map6);
     }
 
+
     /**
-     * fonction pour créer les boutons de sélection de map
-     * @param gridLayout
-     * @param lesMap
+     * Creer une liste de boutons
+     *
+     * @param grid La liste ou on ajoute les boutons
+     * @param maps La liste de maps
      */
-    public void createButtons(GridLayout gridLayout, List<String> lesMap) {
-        //parcourt toutes les maps
-        for (int i = 0; i < lesMap.size(); i++) {
-            //crée un bouton et ajoute le style
+    public void createButtons(GridLayout grid, List<String> maps) {
+        for (int i = 0; i < maps.size(); i++) {
             Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonLevel), null, 0);
             button.setHeight(200);
             button.setWidth(200);
@@ -198,39 +211,14 @@ public class MapSelectionActivity extends AppCompatActivity {
             button.setLayoutParams(params);
             button.setText(Integer.toString(i + 1));
             int finalI = i;
-            //ajoute un listener sur le bouton pour lancer la partie
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(this, GameActivity.class);
-                intent.putExtra("map", lesMap.get(finalI));
-                intent.putExtra("level", finalI + 1);
+                intent.putExtra("map", maps.get(finalI));
+                intent.putExtra("level", "Level " + Integer.toString(finalI + 1));
                 startActivity(intent);
             });
-            //ajoute le bouton dans le gridlayout
-            gridLayout.addView(button);
+            grid.addView(button);
         }
     }
-
-    public void loadMapFile(AssetManager assetManager,String fileName, List<String> lesMapsFichier) {
-        try {
-            //on lit le fichier map dans les assets
-            InputStream inputStream = assetManager.open(fileName);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            String map = "";
-            //on parcourt le fichier ligne par ligne
-            while ((line = bufferedReader.readLine()) != null) {
-                //on construit la map
-                map += line + "\n";
-            }
-
-            //On ajoute la map dans le tableau
-            lesMapsFichier.add(map);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
 
 }

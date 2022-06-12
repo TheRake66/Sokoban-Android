@@ -74,7 +74,7 @@ public class Sound {
     /**
      * Joue la musique de fond
      */
-    public  void playBackgroundSound(){
+    private void playBackgroundSound(){
         this.player.play(this.loaded.get(SOUND_BACKGROUND), this.volume, this.volume, 1, -1, 1);
     }
 

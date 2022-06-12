@@ -30,6 +30,8 @@ public class GameActivity extends AppCompatActivity {
 
     /**
      * Initialise le jeu, charge la carte et affiche le plateau de jeu
+     *
+     * @param savedInstanceState
      */
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -38,8 +40,8 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
 
         // Recuperation du numero de niveau
-        int numLevel = getIntent().getIntExtra("level", 1);
-        ((TextView)findViewById(R.id.level)).setText("Level " + numLevel);
+        String levelName = getIntent().getStringExtra("level");
+        ((TextView)findViewById(R.id.level)).setText(levelName);
 
         // Ajout des écouteurs de clics
         findViewById(R.id.pause).setOnClickListener(v -> this.toogleMsgbox());

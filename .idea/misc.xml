@@ -16,10 +16,10 @@
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/drawable/msgbox_bar.xml" value="0.1135" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/drawable/msgbpx-bar.xml" value="0.1135" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_accueil.xml" value="0.31614583333333335" />
-        <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_game.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_game.xml" value="0.33" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_home.xml" value="0.31614583333333335" />
         <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_main.xml" value="0.33" />
-        <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_map_selection.xml" value="0.33" />
+        <entry key="..\:/Users/thiba/Bureau/Sokoban-Android/app/src/main/res/layout/activity_map_selection.xml" value="0.5" />
       </map>
     </option>
   </component>
