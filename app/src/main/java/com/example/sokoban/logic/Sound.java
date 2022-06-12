@@ -31,7 +31,7 @@ public class Sound {
     private HashMap<Integer, Integer> loaded = new HashMap<>();
 
     // Mute ou pas
-    private boolean mute = false;
+    private float volume = 1f;
 
     // Les sons
     public static final int SOUND_VICTORY = R.raw.victory;
@@ -55,6 +55,9 @@ public class Sound {
         this.loaded.put(SOUND_MOVE, this.player.load(this.context, SOUND_MOVE, 1));
         this.loaded.put(SOUND_BOX_MOVE, this.player.load(this.context, SOUND_BOX_MOVE, 1));
         this.loaded.put(SOUND_BOX_PLACED, this.player.load(this.context, SOUND_BOX_PLACED, 1));
+        this.player.setOnLoadCompleteListener((SoundPool soundPool, int sampleId, int status) -> {
+            this.playBackgroundSound();
+        });
     }
 
 
@@ -64,9 +67,7 @@ public class Sound {
      * @param sound le son à jouer
      */
     public void playSound(int sound) {
-        if (!mute) {
-            this.player.play(this.loaded.get(sound), 1, 1, 1, 0, 1);
-        }
+        this.player.play(this.loaded.get(sound), this.volume, this.volume, 1, 0, 1);
     }
 
 
@@ -74,9 +75,7 @@ public class Sound {
      * Joue la musique de fond
      */
     public  void playBackgroundSound(){
-        if (!mute) {
-            this.player.play(this.loaded.get(SOUND_BACKGROUND), 1, 1, 1, -1, 1);
-        }
+        this.player.play(this.loaded.get(SOUND_BACKGROUND), this.volume, this.volume, 1, -1, 1);
     }
 
 
@@ -86,7 +85,7 @@ public class Sound {
      * @return true si le son est mute, false sinon
      */
     public boolean isMute() {
-        return mute;
+        return this.volume == 0f;
     }
 
 
@@ -96,13 +95,9 @@ public class Sound {
      * @param mute true si le son doit être mute, false sinon
      */
     public void setMute(boolean mute) {
-        this.mute = mute;
-        if (mute) {
-            for (Integer stream : this.loaded.values()) {
-                this.player.stop(stream);
-            }
-        } else {
-            this.playBackgroundSound();
+        this.volume = mute ? 0f : 1f;
+        for (Integer stream : this.loaded.values()) {
+            this.player.setVolume(stream, this.volume, this.volume);
         }
     }
 

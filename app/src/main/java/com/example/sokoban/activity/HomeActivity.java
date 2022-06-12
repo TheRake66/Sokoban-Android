@@ -9,6 +9,7 @@ import android.graphics.Shader;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextPaint;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.example.sokoban.R;
@@ -18,7 +19,6 @@ public class HomeActivity extends AppCompatActivity {
 
     // Le media player
     public static Sound sound;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +61,5 @@ public class HomeActivity extends AppCompatActivity {
 
         // Initialisation des objects
         this.sound = new Sound(this);
-        this.sound.playBackgroundSound();
     }
 }
