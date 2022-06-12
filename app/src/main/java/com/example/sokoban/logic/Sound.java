@@ -33,13 +33,14 @@ public class Sound {
     // Mute ou pas
     private boolean mute = false;
 
-
     // Les sons
     public static final int SOUND_VICTORY = R.raw.victory;
     public static final int SOUND_BACKGROUND = R.raw.background;
     public static final int SOUND_MOVE = R.raw.move;
     public static final int SOUND_BOX_MOVE = R.raw.box;
     public static final int SOUND_BOX_PLACED = R.raw.placed;
+
+
 
     /**
      * Constructeur

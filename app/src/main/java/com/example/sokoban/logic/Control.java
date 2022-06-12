@@ -68,10 +68,11 @@ public class Control {
         int y = pos[1];
         this.lastDirection = d;
         if (this.canMove(x, y, d, true)) {
+            // On sauvegarde l'ancien etat
             GameActivity.board.saveState();
-            this.moveEntity(x, y, d, true);
+            // On deplace le joueur
+            this.moveEntity(x, y, d);
             this.incrementMoves();
-            HomeActivity.sound.playSound(Sound.SOUND_MOVE);
         } else {
             // Actualise l'image du joueur
             GameActivity.board.displayBoard();
@@ -113,74 +114,74 @@ public class Control {
      * @param x         La position en x
      * @param y         La position en y
      * @param d         La direction du déplacement
-     * @param recursive Si on verifi recursivement
-     * @return True si le déplacement a été effectué, false sinon
      */
-    private boolean moveEntity(int x, int y, int d, boolean recursive) {
-        // Si l'entite peut se déplacer
-        if (this.canMove(x, y, d, recursive)) {
-            // Calcul la nouvelle position
-            int[] newPos = this.changePosition(x, y, d);
-            int newX = newPos[0];
-            int newY = newPos[1];
+    private void moveEntity(int x, int y, int d) {
+        // Calcul la nouvelle position
+        int[] newPos = this.changePosition(x, y, d);
+        int newX = newPos[0];
+        int newY = newPos[1];
 
-            // Recupere le type de l'entite
-            char t = GameActivity.board.getType(x, y);
-            // Recupere le type de l'entite a la nouvelle position
-            char newT = GameActivity.board.getType(newX, newY);
+        // Recupere le type de l'entite a la nouvelle position
+        char newT = GameActivity.board.getType(newX, newY);
 
-
-            // Si l'entite est un joueur sur le target ou une caisse sur le target on remet le target sinon on met le sol
-            char floor = t == Entity.TYPE_PLAYER_ON_TARGET || t == Entity.TYPE_BOX_ON_TARGET ?
-                    Entity.TYPE_TARGET :
-                    Entity.TYPE_FLOOR;
-
-
-            // Les sons de déplacement
-            switch (t) {
-                case Entity.TYPE_PLAYER:
-                case Entity.TYPE_PLAYER_ON_TARGET:
-                    HomeActivity.sound.playSound(Sound.SOUND_MOVE);
-                    break;
-
-                case Entity.TYPE_BOX:
-                case Entity.TYPE_BOX_ON_TARGET:
-                    HomeActivity.sound.playSound(Sound.SOUND_BOX_MOVE);
-                    break;
-            }
-
-
-            // Si entite est un joueur et que la case est un target alors on met le joueur sur le target
-            if (t == Entity.TYPE_PLAYER && newT == Entity.TYPE_TARGET) {
-                t = Entity.TYPE_PLAYER_ON_TARGET;
-                // Si entite est un joueur sur le target et que la case est pas un target alors on met le joueur sur le floor
-            } else if (t == Entity.TYPE_PLAYER_ON_TARGET && newT != Entity.TYPE_TARGET) {
-                t = Entity.TYPE_PLAYER;
-            }
-
-
-            // Si entite est une caisse et que la case est un target alors on met la caisse sur le target
-            if (t == Entity.TYPE_BOX && newT == Entity.TYPE_TARGET) {
-                HomeActivity.sound.playSound(Sound.SOUND_BOX_PLACED);
-                t = Entity.TYPE_BOX_ON_TARGET;
-                // Si entite est une caisse sur le target et que la case est pas un target alors on met la caisse sur le floor
-            } else if (t == Entity.TYPE_BOX_ON_TARGET && newT != Entity.TYPE_TARGET) {
-                t = Entity.TYPE_BOX;
-            }
-
-
-            // On déplace l'entité
-            GameActivity.board.setType(newX, newY, t);
-            GameActivity.board.setType(x, y, floor);
-            GameActivity.board.displayBoard();
-
-            // Verifi si le joueur a gagné
-            GameActivity.board.checkWin();
-
-            return true;
-        } else {
-            return false;
+        // Deplace recurcivement
+        switch (newT) {
+            case Entity.TYPE_PLAYER:
+            case Entity.TYPE_PLAYER_ON_TARGET:
+            case Entity.TYPE_BOX:
+            case Entity.TYPE_BOX_ON_TARGET:
+                this.moveEntity(newX, newY, d);
+                newT = GameActivity.board.getType(newX, newY);
+                break;
         }
+
+        // Recupere le type de l'entite
+        char t = GameActivity.board.getType(x, y);
+
+        // Si l'entite est un joueur sur le target ou une caisse sur le target on remet le target sinon on met le sol
+        char floor = t == Entity.TYPE_PLAYER_ON_TARGET || t == Entity.TYPE_BOX_ON_TARGET ?
+                Entity.TYPE_TARGET :
+                Entity.TYPE_FLOOR;
+
+        // Les sons de déplacement
+        switch (t) {
+            case Entity.TYPE_PLAYER:
+            case Entity.TYPE_PLAYER_ON_TARGET:
+                HomeActivity.sound.playSound(Sound.SOUND_MOVE);
+                break;
+
+            case Entity.TYPE_BOX:
+            case Entity.TYPE_BOX_ON_TARGET:
+                HomeActivity.sound.playSound(Sound.SOUND_BOX_MOVE);
+                break;
+        }
+
+        // Si entite est un joueur et que la case est un target alors on met le joueur sur le target
+        if (t == Entity.TYPE_PLAYER && newT == Entity.TYPE_TARGET) {
+            t = Entity.TYPE_PLAYER_ON_TARGET;
+            // Si entite est un joueur sur le target et que la case est pas un target alors on met le joueur sur le floor
+        } else if (t == Entity.TYPE_PLAYER_ON_TARGET && newT != Entity.TYPE_TARGET) {
+            t = Entity.TYPE_PLAYER;
+        }
+
+        // Si entite est une caisse et que la case est un target alors on met la caisse sur le target
+        if (t == Entity.TYPE_BOX && newT == Entity.TYPE_TARGET) {
+            HomeActivity.sound.playSound(Sound.SOUND_BOX_PLACED);
+            t = Entity.TYPE_BOX_ON_TARGET;
+            // Si entite est une caisse sur le target et que la case est pas un target alors on met la caisse sur le floor
+        } else if (t == Entity.TYPE_BOX_ON_TARGET && newT != Entity.TYPE_TARGET) {
+            t = Entity.TYPE_BOX;
+        }
+
+        // On déplace l'entité
+        GameActivity.board.setType(newX, newY, t);
+        GameActivity.board.setType(x, y, floor);
+
+        // On affiche le board
+        GameActivity.board.displayBoard();
+
+        // Verifi si le joueur a gagné
+        GameActivity.board.checkWin();
     }
 
 
@@ -198,29 +199,30 @@ public class Control {
         int newX = newPos[0];
         int newY = newPos[1];
 
-        // Si le joueur est en dehors du plateau
+        // Recupere le plateau
         char[][] board = GameActivity.board.getBoard();
-        if (newX < 0 || newX >= board[0].length ||
-                newY < 0 || newY >= board.length) {
-            return false;
-        }
 
         // Futur type de la case
         char t = GameActivity.board.getType(newX, newY);
 
-        // Si le joueur est sur un mur
-        if (t == Entity.TYPE_WALL) {
+        // Si l'entite est en dehors du plateau
+        if (newX < 0 || newX >= board[0].length ||
+                newY < 0 || newY >= board.length) {
             return false;
 
-            // Si l'entite est sur une caisse
+        // Si le joueur est sur un mur
+        } else if (t == Entity.TYPE_WALL) {
+            return false;
+
+        // Si l'entite est sur une caisse on regard si la caisse peut bouger
         } else if (t == Entity.TYPE_BOX || t == Entity.TYPE_BOX_ON_TARGET) {
             if (recursive) {
-                return this.moveEntity(newX, newY, d, false);
+                return this.canMove(newX, newY, d, false);
             } else {
                 return false;
             }
 
-            // Si l'entite peut se déplacer
+        // Si l'entite peut se déplacer
         } else {
             return true;
         }

@@ -304,7 +304,7 @@ public class Board {
     /**
      * Affichage du plateau de jeu dans la console
      */
-    private void printMatrix() {
+    public void printMatrix() {
         Log.d("GameActivity", GameActivity.map.matrixToString(this.matrix));
     }
 
