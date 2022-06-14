@@ -10,7 +10,7 @@ public class Map {
      */
     public static char[][] stringToMatrix(String map) {
         // Découpe la carte en lignes
-        String[] lines = map.split("\n");
+        String[] lines = map.split("\\r?\\n|\\r");
         // Initialise la matrice
         int height = lines.length;
         int width = lines[0].length();

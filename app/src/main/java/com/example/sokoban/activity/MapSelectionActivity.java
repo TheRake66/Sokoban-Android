@@ -8,6 +8,7 @@ import android.content.res.AssetManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
@@ -19,15 +20,22 @@ import com.example.sokoban.lib.BoardEntity;
 import com.example.sokoban.lib.Function;
 import com.example.sokoban.lib.MyDatabaseHelper;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MapSelectionActivity extends AppCompatActivity {
 
@@ -65,6 +73,9 @@ public class MapSelectionActivity extends AppCompatActivity {
         GridLayout gridLayoutSQLite = findViewById(R.id.gridLayoutSQLite);
         List<BoardEntity> boards = HomeActivity.db.getAllBoards();
         this.createButtons(gridLayoutSQLite, boards);
+
+        // Charge les maps en ligne
+        this.loadApiMaps();
     }
 
 
@@ -90,11 +101,60 @@ public class MapSelectionActivity extends AppCompatActivity {
 
 
     /**
+     * Charge les maps depuis l'API
+     */
+    private void loadApiMaps() {
+        try {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            URL apiEndpoint = new URL("http://192.168.1.90:6600/maps");
+            HttpURLConnection myConnection =
+                    (HttpURLConnection) apiEndpoint.openConnection();
+            myConnection.setRequestMethod("GET");
+            myConnection.connect();
+
+            int responseCode = myConnection.getResponseCode();
+            if (responseCode == HttpsURLConnection.HTTP_OK) {
+
+                InputStream responseBody = myConnection.getInputStream();
+                InputStreamReader responseBodyReader =
+                        new InputStreamReader(responseBody, "UTF-8");
+                BufferedReader in = new BufferedReader(responseBodyReader);
+                StringBuilder result = new StringBuilder();
+                String line;
+                while ((line = in.readLine()) != null) {
+                    result.append(line);
+                }
+                in.close();
+
+                List<BoardEntity> boards = new ArrayList<>();
+                JSONObject json = new JSONObject(result.toString());
+                JSONArray content = json.getJSONArray("content");
+                for (int i = 0; i < content.length(); i++) {
+                    JSONObject map = content.getJSONObject(i);
+                    Log.i("Map", map.toString());
+                    String name = map.getString("_name");
+                    String board = map.getString("board");
+                    int width = map.getInt("width");
+                    int height = map.getInt("height");
+                    boards.add(new BoardEntity(name, board, width, height));
+                }
+
+                this.createButtons(findViewById(R.id.gridLayoutAPI), boards);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
      * Recupere la liste des maps en dure
      *
      * @return List<BoardEntity> Les maps
      */
-    public List<BoardEntity> getHardMaps() {
+    private List<BoardEntity> getHardMaps() {
         List<BoardEntity> maps = new ArrayList<>();
 
         maps.add(new BoardEntity(
@@ -209,7 +269,7 @@ public class MapSelectionActivity extends AppCompatActivity {
      * @param grid La liste ou on ajoute les boutons
      * @param maps La liste de maps
      */
-    public void createButtons(GridLayout grid, List<BoardEntity> maps) {
+    private void createButtons(GridLayout grid, List<BoardEntity> maps) {
         for (int i = 0; i < maps.size(); i++) {
             Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonLevel), null, 0);
             button.setHeight(200);
