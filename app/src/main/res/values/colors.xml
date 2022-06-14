@@ -32,4 +32,8 @@
 
     <color name="button">#5DB4E3</color>
     <color name="button_shadow">#55A4CF</color>
+
+    <color name="button_warn">#FFCB00</color>
+    <color name="button_warn_shadow">#FFB300</color>
+
 </resources>

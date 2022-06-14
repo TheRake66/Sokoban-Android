@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.sokoban.R;
@@ -56,8 +57,14 @@ public class MapSelectionActivity extends AppCompatActivity {
         // Bouton retour
         Function.closeAct(this, R.id.button_return);
 
-        // Bouton Play
+        // Bouton admin
         Function.openAct(this, AdminActivity.class, R.id.button_admin);
+
+        // Bouton resfresh
+        Function.onClick(this, R.id.button_refresh, v -> {
+            this.loadSQLiteMaps();
+            this.loadApiMaps();
+        });
 
         // Bouton mute
         Function.toogleMute(this, R.id.button_mute);
@@ -70,9 +77,7 @@ public class MapSelectionActivity extends AppCompatActivity {
         Function.openFile(this, R.id.button_ouvrir);
 
         // Charge les maps en BDD
-        GridLayout gridLayoutSQLite = findViewById(R.id.gridLayoutSQLite);
-        List<BoardEntity> boards = HomeActivity.db.getAllBoards();
-        this.createButtons(gridLayoutSQLite, boards);
+        this.loadSQLiteMaps();
 
         // Charge les maps en ligne
         this.loadApiMaps();
@@ -101,9 +106,23 @@ public class MapSelectionActivity extends AppCompatActivity {
 
 
     /**
+     * Charge les maps depuis SQLite
+     */
+    private void loadSQLiteMaps() {
+        GridLayout gridLayoutSQLite = findViewById(R.id.gridLayoutSQLite);
+        gridLayoutSQLite.removeAllViews();
+        List<BoardEntity> boards = HomeActivity.db.getAllBoards();
+        this.createButtons(gridLayoutSQLite, boards);
+    }
+
+
+    /**
      * Charge les maps depuis l'API
      */
     private void loadApiMaps() {
+        GridLayout grid = (GridLayout)findViewById(R.id.gridLayoutAPI);
+        grid.removeAllViews();
+
         try {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -141,7 +160,7 @@ public class MapSelectionActivity extends AppCompatActivity {
                     boards.add(new BoardEntity(name, board, width, height));
                 }
 
-                this.createButtons(findViewById(R.id.gridLayoutAPI), boards);
+                this.createButtons(grid, boards);
             }
         } catch (Exception e) {
             e.printStackTrace();

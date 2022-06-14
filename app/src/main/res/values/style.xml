@@ -61,6 +61,9 @@
     <style name="ButtonLevelLock" parent="BaseButton">
         <item name="android:background">@drawable/button_level_lock</item>
     </style>
+    <style name="ButtonWarn" parent="BaseButton">
+        <item name="android:background">@drawable/button_warn</item>
+    </style>
 
 </resources>
 
