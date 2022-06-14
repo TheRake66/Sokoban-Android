@@ -75,7 +75,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
      */
     public List<BoardEntity> getAllBoards() {
         List<BoardEntity> boards = new ArrayList<BoardEntity>();
-        String selectQuery = "SELECT * FROM boards";
+        String selectQuery = "SELECT * FROM boards ORDER BY name";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -113,7 +113,7 @@ public class MyDatabaseHelper extends SQLiteOpenHelper {
      *
      * @param board Le niveau a supprimer
      */
-    public void deleteNote(BoardEntity board) {
+    public void deleteBoard(BoardEntity board) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete("boards", "name = ?",
                 new String[] { String.valueOf(board.name) });

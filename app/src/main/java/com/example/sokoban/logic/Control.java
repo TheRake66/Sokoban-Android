@@ -181,7 +181,9 @@ public class Control {
         GameActivity.board.displayBoard();
 
         // Verifi si le joueur a gagné
-        GameActivity.board.checkWin();
+        if (t == Entity.TYPE_PLAYER) {
+            GameActivity.board.checkWin();
+        }
     }
 
 

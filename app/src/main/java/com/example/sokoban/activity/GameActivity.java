@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.sokoban.R;
+import com.example.sokoban.lib.Function;
 import com.example.sokoban.logic.Board;
 import com.example.sokoban.logic.Control;
 import com.example.sokoban.logic.Entity;
@@ -39,18 +40,20 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        // Encoche
+        Function.addNotch(this, R.color.header);
+
         // Recuperation du numero de niveau
         String levelName = getIntent().getStringExtra("level");
-        ((TextView)findViewById(R.id.level)).setText(levelName);
+        Function.setText(this, R.id.level, levelName);
 
         // Ajout des écouteurs de clics
-        findViewById(R.id.pause).setOnClickListener(v -> this.toogleMsgbox());
-        findViewById(R.id.continu).setOnClickListener(v -> this.toogleMsgbox());
-        findViewById(R.id.menu).setOnClickListener(v -> this.finish());
-        findViewById(R.id.reset).setOnClickListener(v -> GameActivity.board.resetBoard());
-        findViewById(R.id.undo).setOnClickListener(v -> GameActivity.board.loadState());
-        Button mute = findViewById(R.id.button_mute_game);
-        mute.setOnClickListener(v -> this.toogleMute(mute));
+        Function.onClick(this, R.id.pause, v -> this.toogleMsgbox());
+        Function.onClick(this, R.id.continu, v -> this.toogleMsgbox());
+        Function.closeAct(this, R.id.menu);
+        Function.onClick(this, R.id.reset, v -> GameActivity.board.resetBoard());
+        Function.onClick(this, R.id.undo, v -> GameActivity.board.loadState());
+        Function.toogleMute(this, R.id.button_mute_game);
 
         // Preparation du jeu
         String map = getIntent().getStringExtra("map");
@@ -77,22 +80,6 @@ public class GameActivity extends AppCompatActivity {
                 msgbox.getVisibility() == findViewById(R.id.msgbox).INVISIBLE ?
                         findViewById(R.id.msgbox).VISIBLE :
                         findViewById(R.id.msgbox).INVISIBLE);
-    }
-
-
-    /**
-     * Mute ou unmute le son
-     *
-     * @param mute Le bouton mute
-     */
-    private void toogleMute(Button mute) {
-        if (HomeActivity.sound.isMute()) {
-            HomeActivity.sound.setMute(false);
-            mute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.sound, 0, 0, 0);
-        } else {
-            HomeActivity.sound.setMute(true);
-            mute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.mute, 0, 0, 0);
-        }
     }
 
 }

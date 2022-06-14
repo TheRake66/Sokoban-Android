@@ -13,6 +13,8 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.example.sokoban.R;
+import com.example.sokoban.lib.Function;
+import com.example.sokoban.lib.MyDatabaseHelper;
 import com.example.sokoban.logic.Sound;
 
 
@@ -21,6 +23,9 @@ public class HomeActivity extends AppCompatActivity {
 
     // Le media player
     public static Sound sound;
+
+    // La BDD
+    public static MyDatabaseHelper db;
 
 
     /**
@@ -32,6 +37,9 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // Encoche
+        Function.addNotch(this, R.color.header_main);
 
         // Degrader de couleur
         TextView textView = (TextView) findViewById(R.id.copy);
@@ -56,9 +64,7 @@ public class HomeActivity extends AppCompatActivity {
         textView.getPaint().setShader(textShader);
 
         // Bouton Play
-        findViewById(R.id.button_play).setOnClickListener(v -> {
-            startActivity(new Intent(HomeActivity.this, MapSelectionActivity.class));
-        });
+        Function.openAct(this, MapSelectionActivity.class, R.id.button_play);
 
         // Bouton More Games
         findViewById(R.id.button_more).setOnClickListener(v -> {
@@ -69,6 +75,9 @@ public class HomeActivity extends AppCompatActivity {
 
         // Initialisation des objects
         this.sound = new Sound(this);
+
+        // BDD
+        this.db = new MyDatabaseHelper(this);
     }
 
 }

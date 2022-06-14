@@ -7,6 +7,17 @@
     android:background="@color/background_light"
     tools:context=".activity.AdminActivity">
 
+    <Button
+        android:id="@+id/button_ouvrir2"
+        style="@style/Button"
+        android:layout_width="130sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Ajouter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/back"
         style="@style/Header"
@@ -16,21 +27,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <Button
-            android:id="@+id/reset2"
-            style="@style/ButtonCancel"
-            android:layout_width="60dp"
-            android:layout_height="0dp"
-            android:drawableStart="@drawable/delete"
-            android:drawableLeft="@drawable/delete"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button_mute"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
-            tools:ignore="SpeakableTextPresentCheck" />
 
         <Button
             android:id="@+id/button_return"
@@ -74,4 +70,22 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/back" />
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:padding="64px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_ouvrir2">
+
+        <LinearLayout
+            android:id="@+id/map_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

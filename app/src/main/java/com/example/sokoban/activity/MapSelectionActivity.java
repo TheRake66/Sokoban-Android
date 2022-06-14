@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.sokoban.R;
 import com.example.sokoban.lib.BoardEntity;
+import com.example.sokoban.lib.Function;
 import com.example.sokoban.lib.MyDatabaseHelper;
 
 import java.io.BufferedReader;
@@ -41,48 +42,29 @@ public class MapSelectionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_selection);
 
+        // Encoche
+        Function.addNotch(this, R.color.header);
+
         // Bouton retour
-        findViewById(R.id.button_return).setOnClickListener(v -> this.finish());
+        Function.closeAct(this, R.id.button_return);
 
         // Bouton Play
-        findViewById(R.id.button_admin).setOnClickListener(v -> {
-            startActivity(new Intent(MapSelectionActivity.this, AdminActivity.class));
-        });
+        Function.openAct(this, AdminActivity.class, R.id.button_admin);
 
         // Bouton mute
-        Button buttonMute = findViewById(R.id.button_mute);
-        findViewById(R.id.button_mute).setOnClickListener(v -> {
-            if (HomeActivity.sound.isMute()) {
-                HomeActivity.sound.setMute(false);
-                buttonMute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.sound, 0, 0, 0);
-            } else {
-                HomeActivity.sound.setMute(true);
-                buttonMute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.mute, 0, 0, 0);
-            }
-        });
+        Function.toogleMute(this, R.id.button_mute);
 
         //Ajoute les maps en dur dans le gridlayout et crée les boutons de sélection de map
         GridLayout gridLayoutDure = findViewById(R.id.gridLayoutDure);
         this.createButtons(gridLayoutDure, this.getHardMaps());
 
-
         // Bouton ouvrir
-        findViewById(R.id.button_ouvrir).setOnClickListener(v -> {
-            Intent intent = new Intent()
-                    .setType("*/*")
-                    .setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select a file"), 123);
-        });
+        Function.openFile(this, R.id.button_ouvrir);
 
         // Charge les maps en BDD
         GridLayout gridLayoutSQLite = findViewById(R.id.gridLayoutSQLite);
-        MyDatabaseHelper db = new MyDatabaseHelper(this);
-        List<BoardEntity> boards = db.getAllBoards();
-        List<String> maps = new ArrayList<>();
-        for (BoardEntity board : boards) {
-            maps.add(board.board);
-        }
-        this.createButtons(gridLayoutSQLite, maps);
+        List<BoardEntity> boards = HomeActivity.db.getAllBoards();
+        this.createButtons(gridLayoutSQLite, boards);
     }
 
 
@@ -96,29 +78,13 @@ public class MapSelectionActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 123 && resultCode == RESULT_OK) {
-            try {
-                Uri selected = data.getData();
-                InputStream fis = getContentResolver().openInputStream(selected);
-                StringBuilder text = new StringBuilder();
-                BufferedReader br = new BufferedReader(new InputStreamReader(fis));
-                String line;
-                while ((line = br.readLine()) != null) {
-                    text.append(line);
-                    text.append('\n');
-                }
-                br.close();
-                Intent intent = new Intent(this, GameActivity.class);
-                intent.putExtra("map", text.toString());
-                String name = (new File("" + selected.getPath().split(":")[1])).getName();
-                intent.putExtra("level", name);
-                startActivity(intent);
-            }
-            catch (IOException e) {
-                Toast
-                    .makeText(this, "Unable to open this file" + e.getMessage(), Toast.LENGTH_SHORT)
-                    .show();
-            }
+        String result = Function.readFile(this, requestCode, resultCode, data);
+        if (result != null) {
+            Intent intent = new Intent(this, GameActivity.class);
+            intent.putExtra("map", result.toString());
+            String name = Function.getFileNameWithoutExtension(data);
+            intent.putExtra("level", name);
+            startActivity(intent);
         }
     }
 
@@ -126,88 +92,114 @@ public class MapSelectionActivity extends AppCompatActivity {
     /**
      * Recupere la liste des maps en dure
      *
-     * @return List<String> Les maps
+     * @return List<BoardEntity> Les maps
      */
-    public List<String> getHardMaps() {
-        String map1 =
-                "######\n" +
-                "#..P.#\n" +
-                "#B####\n" +
-                "#.#---\n" +
-                "#G#---\n" +
-                "###---";
+    public List<BoardEntity> getHardMaps() {
+        List<BoardEntity> maps = new ArrayList<>();
 
-        String map2 =
+        maps.add(new BoardEntity(
+                "Level 1",
                 "######\n" +
-                "#P...#\n" +
-                "#..BG#\n" +
-                "#.GB.#\n" +
-                "######";
+                    "#..P.#\n" +
+                    "#B####\n" +
+                    "#.#---\n" +
+                    "#G#---\n" +
+                    "###---",
+                0,
+                0
+        ));
 
-        String map3 =
+        maps.add(new BoardEntity(
+                "Level 2",
+                "######\n" +
+                    "#P...#\n" +
+                    "#..BG#\n" +
+                    "#.GB.#\n" +
+                    "######",
+                0,
+                0
+        ));
+
+        maps.add(new BoardEntity(
+                "Level 3",
                 "#####-\n" +
-                "#P..##\n" +
-                "#GBS.#\n" +
-                "#..#.#\n" +
-                "#....#\n" +
-                "######";
+                    "#P..##\n" +
+                    "#GBS.#\n" +
+                    "#..#.#\n" +
+                    "#....#\n" +
+                    "######",
+                0,
+                0
+        ));
 
-        String map4 =
+        maps.add(new BoardEntity(
+                "Level 4",
                 "----#######--------\n" +
-                "----#..#..####-----\n" +
-                "#####.B#B.#..##----\n" +
-                "#GG.#..#..#...#----\n" +
-                "#GG.#.B#B.#..B####-\n" +
-                "#G..#.....#B..#..#-\n" +
-                "#GG...B#..#.B....#-\n" +
-                "#GGP#..#B.#B..#..#-\n" +
-                "#GG.#.B#.....B#..#-\n" +
-                "#GG.#..#BB#B..#..##\n" +
-                "#GG.#.B#..#..B#B..#\n" +
-                "#GG.#..#..#...#...#\n" +
-                "##G.####..#####...#\n" +
-                "-####--####---#####";
+                    "----#..#..####-----\n" +
+                    "#####.B#B.#..##----\n" +
+                    "#GG.#..#..#...#----\n" +
+                    "#GG.#.B#B.#..B####-\n" +
+                    "#G..#.....#B..#..#-\n" +
+                    "#GG...B#..#.B....#-\n" +
+                    "#GGP#..#B.#B..#..#-\n" +
+                    "#GG.#.B#.....B#..#-\n" +
+                    "#GG.#..#BB#B..#..##\n" +
+                    "#GG.#.B#..#..B#B..#\n" +
+                    "#GG.#..#..#...#...#\n" +
+                    "##G.####..#####...#\n" +
+                    "-####--####---#####",
+                0,
+                0
+        ));
 
-        String map5 =
+        maps.add(new BoardEntity(
+                "Level 5",
                 "####---######--------\n" +
-                "#.B#---#...G#--------\n" +
-                "#..#####..#########--\n" +
-                "#..G...#........B.#--\n" +
-                "#.B..G.#....G####.#--\n" +
-                "#..##..#..######..#--\n" +
-                "#.....###.######.##--\n" +
-                "####B.###.#####..#---\n" +
-                "---#..##..G####.##---\n" +
-                "---#G..#......B.#----\n" +
-                "---#.B..G.####..#----\n" +
-                "---#..###.####.##----\n" +
-                "--##.GG##B####.##----\n" +
-                "--#.B..........G#----\n" +
-                "--#........B.####----\n" +
-                "--####..###P.#-------\n" +
-                "-----#B.#-####-------\n" +
-                "-----#..#------------\n" +
-                "-----####------------";
+                    "#.B#---#...G#--------\n" +
+                    "#..#####..#########--\n" +
+                    "#..G...#........B.#--\n" +
+                    "#.B..G.#....G####.#--\n" +
+                    "#..##..#..######..#--\n" +
+                    "#.....###.######.##--\n" +
+                    "####B.###.#####..#---\n" +
+                    "---#..##..G####.##---\n" +
+                    "---#G..#......B.#----\n" +
+                    "---#.B..G.####..#----\n" +
+                    "---#..###.####.##----\n" +
+                    "--##.GG##B####.##----\n" +
+                    "--#.B..........G#----\n" +
+                    "--#........B.####----\n" +
+                    "--####..###P.#-------\n" +
+                    "-----#B.#-####-------\n" +
+                    "-----#..#------------\n" +
+                    "-----####------------",
+                0,
+                0
+        ));
 
-        String map6 =
+        maps.add(new BoardEntity(
+                "Level 6",
                 "--------#####-------------\n" +
-                "--------#...####----------\n" +
-                "--------#.B....####--####-\n" +
-                "--------#...#.B#..####..#-\n" +
-                "###########.#...B...#...#-\n" +
-                "#GG.....#.B..####.#..#..#-\n" +
-                "#GGB..#...B..#..B.#.B.G##-\n" +
-                "#GS#.#.B.B.##..##....#G#--\n" +
-                "#GG#B.P.#...##....BB.#G#--\n" +
-                "#GG#.B.B..B.B.##...##.G#--\n" +
-                "#GSBB.#.##...B.#B#.B.#G#--\n" +
-                "#GG#......##...#.....#G#--\n" +
-                "#GG#######..###.######G##-\n" +
-                "#.BB..................SG##\n" +
-                "#..##################..GG#\n" +
-                "####----------------######";
+                    "--------#...####----------\n" +
+                    "--------#.B....####--####-\n" +
+                    "--------#...#.B#..####..#-\n" +
+                    "###########.#...B...#...#-\n" +
+                    "#GG.....#.B..####.#..#..#-\n" +
+                    "#GGB..#...B..#..B.#.B.G##-\n" +
+                    "#GS#.#.B.B.##..##....#G#--\n" +
+                    "#GG#B.P.#...##....BB.#G#--\n" +
+                    "#GG#.B.B..B.B.##...##.G#--\n" +
+                    "#GSBB.#.##...B.#B#.B.#G#--\n" +
+                    "#GG#......##...#.....#G#--\n" +
+                    "#GG#######..###.######G##-\n" +
+                    "#.BB..................SG##\n" +
+                    "#..##################..GG#\n" +
+                    "####----------------######",
+                0,
+                0
+        ));
 
-        return Arrays.asList(map1, map2, map3, map4, map5, map6);
+        return maps;
     }
 
 
@@ -217,7 +209,7 @@ public class MapSelectionActivity extends AppCompatActivity {
      * @param grid La liste ou on ajoute les boutons
      * @param maps La liste de maps
      */
-    public void createButtons(GridLayout grid, List<String> maps) {
+    public void createButtons(GridLayout grid, List<BoardEntity> maps) {
         for (int i = 0; i < maps.size(); i++) {
             Button button = new Button(new ContextThemeWrapper(this, R.style.ButtonLevel), null, 0);
             button.setHeight(200);
@@ -225,14 +217,14 @@ public class MapSelectionActivity extends AppCompatActivity {
             button.setTextSize(25);
             button.setGravity(Gravity.CENTER_VERTICAL | Gravity.CENTER_HORIZONTAL);
             GridLayout.LayoutParams params = new GridLayout.LayoutParams(GridLayout.spec(GridLayout.UNDEFINED, 0f), GridLayout.spec(GridLayout.UNDEFINED, 0f));
-            params.setMargins(0, 0, 30, 20);
+            params.setMargins(0, 0, 32, 32);
             button.setLayoutParams(params);
             button.setText(Integer.toString(i + 1));
             int finalI = i;
             button.setOnClickListener(v -> {
                 Intent intent = new Intent(this, GameActivity.class);
-                intent.putExtra("map", maps.get(finalI));
-                intent.putExtra("level", "Level " + Integer.toString(finalI + 1));
+                intent.putExtra("map", maps.get(finalI).board);
+                intent.putExtra("level", maps.get(finalI).name);
                 startActivity(intent);
             });
             grid.addView(button);
