@@ -127,7 +127,7 @@ public class MapSelectionActivity extends AppCompatActivity {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
 
-            URL apiEndpoint = new URL("http://192.168.1.90:6600/maps");
+            URL apiEndpoint = new URL("http://185.212.226.244:6600/maps");
             HttpURLConnection myConnection =
                     (HttpURLConnection) apiEndpoint.openConnection();
             myConnection.setRequestMethod("GET");
